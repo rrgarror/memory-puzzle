@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11100f">
+    <title>Memory Puzzle</title>
+    <link rel="stylesheet" href="styles.css?v=20260930-1">
+    <script src="script.js?v=20260930-1" defer></script>
+  </head>
+
+  <body>
+    <main class="page-shell">
+      <section
+        class="puzzle-stage is-loading is-empty"
+        id="puzzleStage"
+        aria-label="Interactive memory puzzle"
+      >
+        <div class="stage-light stage-light--one" aria-hidden="true"></div>
+        <div class="stage-light stage-light--two" aria-hidden="true"></div>
+
+        <button
+          class="advance-control"
+          id="advanceControl"
+          type="button"
+          aria-label="Show the first memory"
+          aria-describedby="puzzleStatus"
+          disabled
+        ></button>
+
+        <button class="restart-button" id="restartButton" type="button" aria-label="Restart puzzle">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5.2 8.2A8 8 0 1 1 4.5 15M5.2 8.2V3.8M5.2 8.2h4.4"></path>
+          </svg>
+        </button>
+
+        <div class="tap-indicator" id="tapIndicator" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div class="piece-area" id="pieceArea" aria-hidden="true">
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="1"
+            style="--x: 16%; --y: 27%; --w: 21%; --h: 37.33%; --rotation: -7deg; --z: 6;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-1-clip">
+                  <path d="M0 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo1.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-1-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="2"
+            style="--x: 25%; --y: 72%; --w: 21%; --h: 37.33%; --rotation: 6deg; --z: 5;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-2-clip">
+                  <path d="M0 0H105C115 0 105 -50 150 -50C195 -50 185 0 195 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H0Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo2.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-2-clip)"></image>
+              <path class="piece-edge" d="M0 0H105C115 0 105 -50 150 -50C195 -50 185 0 195 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H0Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="3"
+            style="--x: 46%; --y: 27%; --w: 21%; --h: 37.33%; --rotation: 4deg; --z: 4;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-3-clip">
+                  <path d="M0 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H195C185 300 195 350 150 350C105 350 115 300 105 300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo3.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-3-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H195C185 300 195 350 150 350C105 350 115 300 105 300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="4"
+            style="--x: 92.5%; --y: 70%; --w: 18%; --h: 32%; --rotation: -5deg; --z: 9;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-4-clip">
+                  <path d="M0 0H105C115 0 105 50 150 50C195 50 185 0 195 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo4.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-4-clip)"></image>
+              <path class="piece-edge" d="M0 0H105C115 0 105 50 150 50C195 50 185 0 195 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="5"
+            style="--x: 77%; --y: 28%; --w: 21%; --h: 37.33%; --rotation: 7deg; --z: 3;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-5-clip">
+                  <path d="M0 0H300V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo5.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-5-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece loose-piece"
+            data-piece="6"
+            style="--x: 57%; --y: 73%; --w: 21%; --h: 37.33%; --rotation: -6deg; --z: 2;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-6-clip">
+                  <path d="M0 0H105C115 0 105 -50 150 -50C195 -50 185 0 195 0H300V300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo6.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-6-clip)"></image>
+              <path class="piece-edge" d="M0 0H105C115 0 105 -50 150 -50C195 -50 185 0 195 0H300V300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece compound-piece"
+            data-piece="7"
+            style="--x: 22%; --y: 50%; --w: 28%; --h: 63%; --rotation: -2deg; --z: 12;"
+            hidden
+          >
+            <svg viewBox="-50 0 400 600" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-7-clip">
+                  <path d="M0 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V405C300 415 250 405 250 450C250 495 300 485 300 495V600H0Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo7.jpg" x="-50" y="0" width="400" height="600" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-7-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V405C300 415 250 405 250 450C250 495 300 485 300 495V600H0Z"></path>
+              <path class="piece-seam" d="M0 300H105C115 300 105 250 150 250C195 250 185 300 195 300H300"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece transformed-piece"
+            data-piece="8"
+            style="--x: 46%; --y: 39%; --w: 28%; --h: 49.78%; --rotation: 2deg; --z: 13;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-8-clip">
+                  <path d="M0 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H195C185 300 195 350 150 350C105 350 115 300 105 300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo8.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-8-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V105C300 115 250 105 250 150C250 195 300 185 300 195V300H195C185 300 195 350 150 350C105 350 115 300 105 300H0V195C0 185 50 195 50 150C50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece transformed-piece"
+            data-piece="9"
+            style="--x: 76%; --y: 40%; --w: 28%; --h: 49.78%; --rotation: -2deg; --z: 14;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-9-clip">
+                  <path d="M0 0H300V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo9.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-9-clip)"></image>
+              <path class="piece-edge" d="M0 0H300V300H195C185 300 195 250 150 250C105 250 115 300 105 300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+
+          <figure
+            class="puzzle-piece transformed-piece"
+            data-piece="10"
+            style="--x: 92.5%; --y: 70%; --w: 18%; --h: 32%; --rotation: -5deg; --z: 15;"
+            hidden
+          >
+            <svg viewBox="-50 -50 400 400" preserveAspectRatio="none">
+              <defs>
+                <clipPath id="piece-10-clip">
+                  <path d="M0 0H105C115 0 105 50 150 50C195 50 185 0 195 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+                </clipPath>
+              </defs>
+              <image href="assets/images/photo10.jpg" x="-50" y="-50" width="400" height="400" preserveAspectRatio="xMidYMid slice" clip-path="url(#piece-10-clip)"></image>
+              <path class="piece-edge" d="M0 0H105C115 0 105 50 150 50C195 50 185 0 195 0H300V105C300 115 350 105 350 150C350 195 300 185 300 195V300H0V195C0 185 -50 195 -50 150C-50 105 0 115 0 105Z"></path>
+            </svg>
+          </figure>
+        </div>
+
+        <div class="photo-reveal" id="photoReveal" aria-hidden="true" hidden>
+          <div class="photo-reveal__veil"></div>
+          <img id="revealImage" src="" alt="" draggable="false">
+        </div>
+
+        <div class="completion-frame" id="completionFrame" aria-hidden="true" hidden></div>
+
+        <div class="final-board" id="finalBoard" aria-label="Completed photo puzzle" hidden>
+          <div class="final-tiles" aria-hidden="true">
+            <span class="final-tile final-tile--1"></span>
+            <span class="final-tile final-tile--2"></span>
+            <span class="final-tile final-tile--3"></span>
+            <span class="final-tile final-tile--4"></span>
+            <span class="final-tile final-tile--5"></span>
+            <span class="final-tile final-tile--6"></span>
+          </div>
+          <svg class="final-seams" viewBox="0 0 900 600" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="2" y="2" width="896" height="596"></rect>
+            <path d="M300 0V105C300 115 350 105 350 150C350 195 300 185 300 195V405C300 415 250 405 250 450C250 495 300 485 300 495V600"></path>
+            <path d="M600 0V105C600 115 550 105 550 150C550 195 600 185 600 195V405C600 415 650 405 650 450C650 495 600 485 600 495V600"></path>
+            <path d="M0 300H105C115 300 105 250 150 250C195 250 185 300 195 300H300"></path>
+            <path d="M300 300H405C415 300 405 350 450 350C495 350 485 300 495 300H600"></path>
+            <path d="M600 300H705C715 300 705 250 750 250C795 250 785 300 795 300H900"></path>
+          </svg>
+        </div>
+
+        <div class="join-glow" id="joinGlow" aria-hidden="true"></div>
+        <p class="sr-only" id="puzzleStatus" aria-live="polite">Loading memories</p>
+      </section>
+    </main>
+  </body>
+</html>
