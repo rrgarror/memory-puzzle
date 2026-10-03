@@ -1,12 +1,14 @@
 :root {
   color-scheme: dark;
-  background: #090909;
+  background: #080706;
   color: #f4ecdf;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
-  --paper-edge: rgba(244, 235, 221, 0.84);
-  --paper-edge-soft: rgba(244, 235, 221, 0.62);
-  --coffee-glow: rgba(203, 145, 88, 0.42);
+  --piece-edge: rgba(250, 241, 227, 0.86);
+  --piece-edge-soft: rgba(247, 235, 217, 0.58);
+  --mat-dark: #2a1b17;
+  --mat-mid: #4a3027;
+  --mat-light: #654536;
 }
 
 *,
@@ -27,7 +29,7 @@ body {
   min-height: 100svh;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 44%, #29231f 0%, #11100f 56%, #080808 100%);
+    radial-gradient(circle at 50% 44%, #28211c 0%, #100e0d 58%, #070707 100%);
 }
 
 button {
@@ -50,9 +52,9 @@ button {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(circle at 48% 44%, rgba(135, 91, 54, 0.18), transparent 43%),
-    linear-gradient(145deg, #27221e 0%, #171514 52%, #0c0c0c 100%);
-  box-shadow: 0 0 76px rgba(0, 0, 0, 0.76);
+    radial-gradient(circle at 48% 43%, rgba(129, 85, 50, 0.2), transparent 43%),
+    linear-gradient(145deg, #251f1b 0%, #151312 54%, #0a0909 100%);
+  box-shadow: 0 0 76px rgba(0, 0, 0, 0.78);
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
@@ -68,10 +70,10 @@ button {
 }
 
 .puzzle-stage::before {
-  opacity: 0.34;
+  opacity: 0.28;
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.055) 0 0.055rem, transparent 0.075rem),
-    radial-gradient(circle, rgba(0, 0, 0, 0.28) 0 0.06rem, transparent 0.08rem);
+    radial-gradient(circle, rgba(255, 255, 255, 0.05) 0 0.05rem, transparent 0.075rem),
+    radial-gradient(circle, rgba(0, 0, 0, 0.3) 0 0.055rem, transparent 0.08rem);
   background-position: 0 0, 0.32rem 0.32rem;
   background-size: 0.64rem 0.64rem;
   mix-blend-mode: soft-light;
@@ -79,36 +81,36 @@ button {
 
 .puzzle-stage::after {
   background:
-    radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.6) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.18));
+    radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.62) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.2));
 }
 
 .stage-light {
   position: absolute;
   z-index: 1;
-  width: 36%;
+  width: 37%;
   aspect-ratio: 1;
   border-radius: 50%;
-  opacity: 0.14;
+  opacity: 0.13;
   pointer-events: none;
   filter: blur(5vw);
 }
 
 .stage-light--one {
-  top: -21%;
-  left: 7%;
-  background: #dfa061;
+  top: -22%;
+  left: 6%;
+  background: #d5985f;
 }
 
 .stage-light--two {
-  right: 3%;
-  bottom: -27%;
-  background: #745a43;
+  right: 2%;
+  bottom: -28%;
+  background: #7a5840;
 }
 
 .advance-control {
   position: absolute;
-  z-index: 45;
+  z-index: 60;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -130,7 +132,7 @@ button {
 
 .restart-button {
   position: absolute;
-  z-index: 70;
+  z-index: 80;
   top: clamp(10px, 2.2%, 22px);
   right: clamp(10px, 2.2%, 22px);
   display: grid;
@@ -142,7 +144,7 @@ button {
   padding: 0;
   color: rgba(255, 248, 238, 0.76);
   background: rgba(12, 12, 12, 0.38);
-  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -183,14 +185,14 @@ button {
 
 .tap-indicator {
   position: absolute;
-  z-index: 9;
+  z-index: 55;
   top: 50%;
   left: 50%;
   width: clamp(24px, 3.2vw, 48px);
   aspect-ratio: 1;
-  border: 1px solid rgba(247, 226, 197, 0.28);
+  border: 1px solid rgba(247, 226, 197, 0.32);
   border-radius: 50%;
-  opacity: 0.84;
+  opacity: 0.86;
   pointer-events: none;
   transform: translate(-50%, -50%);
   transition: opacity 300ms ease;
@@ -204,7 +206,7 @@ button {
   width: 18%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgba(248, 226, 196, 0.72);
+  background: rgba(248, 226, 196, 0.76);
   box-shadow: 0 0 14px rgba(226, 168, 106, 0.42);
   transform: translate(-50%, -50%);
 }
@@ -217,7 +219,7 @@ button {
 
 @keyframes tap-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(230, 184, 132, 0.2);
+    box-shadow: 0 0 0 0 rgba(230, 184, 132, 0.22);
     transform: translate(-50%, -50%) scale(0.86);
   }
 
@@ -232,16 +234,180 @@ button {
   }
 }
 
-.piece-area {
+.mat-scene {
   position: absolute;
-  z-index: 5;
-  inset: 0;
+  z-index: 3;
+  inset: 8% 6%;
   pointer-events: none;
-  transition: opacity 320ms ease;
+  perspective: 1400px;
+  transform: rotateX(1.5deg) rotateZ(-0.35deg) scale(1);
+  transform-style: preserve-3d;
+  will-change: transform, filter;
 }
 
-.is-loading .piece-area {
+.mat-shadow {
+  position: absolute;
+  z-index: -1;
+  inset: 5% 2% -3%;
+  border-radius: 3.2%;
+  opacity: 0.72;
+  background: rgba(0, 0, 0, 0.62);
+  filter: blur(2vw);
+  transform: translateY(2.1%) scale(0.98);
+  will-change: opacity, transform, filter;
+}
+
+.puzzle-mat {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5%;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 1vw 1.2vw rgba(0, 0, 0, 0.54));
+}
+
+.mat-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 33.3334%;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 233, 205, 0.16);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.72);
+  background:
+    radial-gradient(circle at 18% 23%, rgba(255, 255, 255, 0.045) 0 0.055rem, transparent 0.075rem),
+    radial-gradient(circle at 72% 66%, rgba(0, 0, 0, 0.26) 0 0.06rem, transparent 0.082rem),
+    linear-gradient(118deg, rgba(255, 255, 255, 0.035), transparent 30%, rgba(0, 0, 0, 0.14) 74%),
+    linear-gradient(145deg, var(--mat-light), var(--mat-mid) 48%, var(--mat-dark));
+  background-position: 0 0, 0.3rem 0.3rem, 0 0, 0 0;
+  background-size: 0.62rem 0.62rem, 0.62rem 0.62rem, auto, auto;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  will-change: transform, filter;
+}
+
+.mat-panel::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.22), transparent 8%, transparent 91%, rgba(0, 0, 0, 0.2)),
+    radial-gradient(ellipse at center, transparent 57%, rgba(0, 0, 0, 0.24));
+  content: "";
+}
+
+.mat-panel--left {
+  left: 0;
+  border-radius: 4.5% 0 0 4.5%;
+  transform-origin: 100% 50%;
+}
+
+.mat-panel--center {
+  left: 33.3333%;
+}
+
+.mat-panel--right {
+  left: 66.6666%;
+  border-radius: 0 4.5% 4.5% 0;
+  transform-origin: 0 50%;
+}
+
+.is-folded .mat-scene {
+  transform: rotateX(7deg) rotateZ(-3.25deg) scale(0.79);
+}
+
+.is-folded .mat-panel--left {
+  z-index: 3;
+  transform: rotateY(178deg);
+  filter: brightness(0.68);
+}
+
+.is-folded .mat-panel--center {
+  z-index: 1;
+  filter: brightness(0.82);
+}
+
+.is-folded .mat-panel--right {
+  z-index: 2;
+  transform: rotateY(-178deg);
+  filter: brightness(0.75);
+}
+
+.mat-stitching {
+  position: absolute;
+  z-index: 8;
+  inset: 1.6%;
+  border: 1px dashed rgba(225, 183, 137, 0.34);
+  border-radius: 1.1%;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.16),
+    inset 0 0 2.4vw rgba(0, 0, 0, 0.22);
+  opacity: 1;
+  transition: opacity 280ms ease;
+}
+
+.mat-crease {
+  position: absolute;
+  z-index: 7;
+  top: 1.5%;
+  bottom: 1.5%;
+  width: 1.2%;
+  opacity: 0.58;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.46), rgba(255, 226, 192, 0.1), transparent);
+  filter: blur(0.05vw);
+  transition: opacity 280ms ease;
+}
+
+.mat-crease--left {
+  left: 32.75%;
+}
+
+.mat-crease--right {
+  left: 66.08%;
+}
+
+.is-folded .mat-stitching,
+.is-folded .mat-crease {
   opacity: 0;
+}
+
+.mat-strap {
+  position: absolute;
+  z-index: 15;
+  top: 5%;
+  bottom: 5%;
+  left: 50%;
+  width: 5.2%;
+  border: 1px solid rgba(230, 189, 143, 0.2);
+  border-radius: 0.55vw;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.34), transparent 19%, rgba(255, 255, 255, 0.045) 50%, transparent 82%, rgba(0, 0, 0, 0.4)),
+    #35221c;
+  box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.42);
+  transform: translateX(-50%);
+  will-change: opacity, transform;
+}
+
+.mat-strap span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(226, 189, 145, 0.42);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.25vw rgba(0, 0, 0, 0.18);
+  transform: translate(-50%, -50%);
+}
+
+.is-folded .mat-strap {
+  opacity: 1;
+}
+
+.piece-area {
+  position: absolute;
+  z-index: 12;
+  inset: 0;
+  pointer-events: none;
 }
 
 .puzzle-piece {
@@ -255,17 +421,13 @@ button {
   opacity: 1;
   transform: translate(-50%, -50%) rotate(var(--rotation)) scale(1);
   transform-origin: 50% 50%;
-  filter: drop-shadow(0 0.72vw 0.68vw rgba(0, 0, 0, 0.64));
+  filter: drop-shadow(0 0.78vw 0.72vw rgba(0, 0, 0, 0.66));
   will-change: left, top, width, height, transform, opacity, filter;
 }
 
-.compound-piece {
-  filter: drop-shadow(0 0.88vw 0.78vw rgba(0, 0, 0, 0.68));
-}
-
 .puzzle-piece[hidden],
-.photo-reveal[hidden],
-.completion-frame[hidden],
+.memory-morph[hidden],
+.assembly-board[hidden],
 .final-board[hidden] {
   display: none;
 }
@@ -282,201 +444,169 @@ button {
 }
 
 .piece-edge,
-.piece-seam {
+.piece-seam,
+.assembly-edge,
+.final-seams {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
   filter:
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.92))
-    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.36));
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.94))
+    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.42));
 }
 
-.piece-edge {
-  stroke: var(--paper-edge);
+.piece-edge,
+.assembly-edge {
+  stroke: var(--piece-edge);
   stroke-width: 1.55;
 }
 
 .piece-seam {
-  stroke: var(--paper-edge-soft);
-  stroke-width: 1.25;
+  stroke: var(--piece-edge-soft);
+  stroke-width: 1.2;
 }
 
-.photo-reveal {
+.memory-morph {
   position: absolute;
-  z-index: 35;
+  z-index: 42;
   inset: 0;
-  display: grid;
-  place-items: center;
   pointer-events: none;
-  perspective: 1000px;
+  perspective: 1200px;
 }
 
-.photo-reveal__veil {
+.memory-morph__veil {
   position: absolute;
   inset: 0;
+  opacity: 1;
   background:
-    radial-gradient(circle at center, rgba(18, 15, 13, 0.12), rgba(7, 7, 7, 0.8) 78%);
+    radial-gradient(circle at center, rgba(18, 15, 13, 0.08), rgba(7, 7, 7, 0.84) 80%);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-}
-
-.photo-reveal img {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 72%;
-  max-height: 76%;
-  border: 1px solid rgba(255, 248, 236, 0.48);
-  border-radius: 3px;
-  background: #151311;
-  box-shadow:
-    0 2.4vw 5vw rgba(0, 0, 0, 0.72),
-    0 0 0 0.38vw rgba(255, 245, 229, 0.055);
-  object-fit: contain;
-  -webkit-user-drag: none;
-  will-change: transform, opacity, filter;
-}
-
-.completion-frame {
-  position: absolute;
-  z-index: 11;
-  top: 14%;
-  left: 14%;
-  width: 72%;
-  height: 72%;
-  border: 1px solid rgba(247, 237, 221, 0.56);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.5),
-    0 1.5vw 3vw rgba(0, 0, 0, 0.38),
-    0 0 2vw rgba(215, 164, 108, 0.12);
-  opacity: 1;
-  pointer-events: none;
-}
-
-.final-board {
-  position: absolute;
-  z-index: 30;
-  top: 14%;
-  left: 14%;
-  width: 72%;
-  height: 72%;
-  overflow: hidden;
-  background: transparent;
-  box-shadow:
-    0 1.6vw 3.2vw rgba(0, 0, 0, 0.54),
-    0 0 0 1px rgba(247, 237, 221, 0.22);
-  pointer-events: none;
-  perspective: 1100px;
-  transform-style: preserve-3d;
-}
-
-.final-board::after {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(3, 3, 3, 0.16), transparent 19%, transparent 82%, rgba(3, 3, 3, 0.18)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 22%, transparent 78%, rgba(0, 0, 0, 0.17));
-  content: "";
-  pointer-events: none;
-}
-
-.final-tiles {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-
-.final-tile {
-  position: absolute;
-  display: block;
-  width: 33.3334%;
-  height: 50%;
-  opacity: 0;
-  background-image: url("assets/images/photo11.jpg");
-  background-repeat: no-repeat;
-  background-size: 300% 200%;
-  backface-visibility: hidden;
-  transform: rotateY(90deg) scale(0.96);
-  transform-origin: center;
-  will-change: transform, opacity, filter;
-}
-
-.final-tile--1 {
-  top: 0;
-  left: 0;
-  background-position: 0 0;
-}
-
-.final-tile--2 {
-  top: 0;
-  left: 33.3333%;
-  background-position: 50% 0;
-}
-
-.final-tile--3 {
-  top: 0;
-  left: 66.6666%;
-  background-position: 100% 0;
-}
-
-.final-tile--4 {
-  top: 50%;
-  left: 0;
-  background-position: 0 100%;
-}
-
-.final-tile--5 {
-  top: 50%;
-  left: 33.3333%;
-  background-position: 50% 100%;
-}
-
-.final-tile--6 {
-  top: 50%;
-  left: 66.6666%;
-  background-position: 100% 100%;
-}
-
-.final-seams {
-  position: absolute;
-  z-index: 5;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  fill: none;
-  stroke: rgba(255, 248, 237, 0.72);
-  stroke-width: 2.3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  filter:
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.95))
-    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.58));
-  vector-effect: non-scaling-stroke;
   will-change: opacity;
 }
 
-.join-glow {
+.morph-shell {
   position: absolute;
-  z-index: 24;
   top: 50%;
   left: 50%;
-  width: 25%;
-  height: 40%;
-  border-radius: 45%;
-  opacity: 0;
-  background: radial-gradient(ellipse, rgba(255, 241, 214, 0.6) 0%, rgba(222, 165, 102, 0.22) 38%, transparent 73%);
+  width: 400px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 2.2vw 3vw rgba(0, 0, 0, 0.66));
+  will-change: transform, filter, opacity;
+}
+
+.morph-shell svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#morphFullImage,
+#morphCropImage {
+  will-change: opacity, filter;
+}
+
+.morph-edge {
+  fill: none;
+  stroke: rgba(255, 246, 232, 0.9);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.95))
+    drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.35));
+}
+
+.assembly-board,
+.final-board {
+  position: absolute;
+  top: 14%;
+  left: 14%;
+  width: 72%;
+  height: 72%;
   pointer-events: none;
-  filter: blur(0.9vw);
+}
+
+.assembly-board {
+  z-index: 24;
+  overflow: visible;
+  filter: drop-shadow(0 1.3vw 1.25vw rgba(0, 0, 0, 0.55));
+}
+
+.final-board {
+  z-index: 32;
+  overflow: hidden;
+  border-radius: 0.15vw;
+  background: transparent;
+  box-shadow:
+    0 1.6vw 3.2vw rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(247, 237, 221, 0.2);
+}
+
+.assembly-board svg,
+.final-board svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.assembly-piece,
+.final-region {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: opacity, transform, filter;
+}
+
+.assembly-piece {
+  opacity: 0;
+}
+
+.assembly-edge {
+  stroke-width: 1.45;
+}
+
+.final-region {
+  opacity: 0;
+}
+
+.final-photo {
+  filter: saturate(0.98) contrast(1.015);
+}
+
+.final-seams {
+  stroke: rgba(255, 248, 237, 0.75);
+  stroke-width: 2.1;
+  opacity: 0;
+}
+
+.final-shade {
+  fill: url(#final-vignette);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.snap-flash {
+  position: absolute;
+  z-index: 36;
+  top: 50%;
+  left: 50%;
+  width: 20%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 238, 211, 0.46);
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 241, 214, 0.34), rgba(219, 159, 99, 0.1) 42%, transparent 72%);
+  pointer-events: none;
+  filter: blur(0.2vw);
   mix-blend-mode: screen;
-  transform: translate(-50%, -50%) scale(0.5);
-  will-change: left, top, width, height, transform, opacity;
+  transform: translate(-50%, -50%) scale(0.35);
+  will-change: left, top, width, transform, opacity;
 }
 
 .sr-only {
@@ -496,13 +626,18 @@ button {
     width: 32px;
   }
 
-  .piece-edge {
-    stroke-width: 1.15;
+  .piece-edge,
+  .assembly-edge {
+    stroke-width: 1.1;
   }
 
   .piece-seam,
   .final-seams {
-    stroke-width: 1;
+    stroke-width: 0.95;
+  }
+
+.mat-stitching {
+    border-width: 0.6px;
   }
 }
 
