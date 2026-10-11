@@ -5,13 +5,13 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const stage = document.getElementById("puzzleStage");
 const advanceControl = document.getElementById("advanceControl");
 const restartButton = document.getElementById("restartButton");
+const fullscreenButton = document.getElementById("fullscreenButton");
 const statusText = document.getElementById("puzzleStatus");
 const pieceArea = document.getElementById("pieceArea");
 const matScene = document.getElementById("matScene");
 const matShadow = document.getElementById("matShadow");
-const matPanelLeft = document.getElementById("matPanelLeft");
-const matPanelRight = document.getElementById("matPanelRight");
-const matStrap = document.getElementById("matStrap");
+const puzzleMat = document.getElementById("puzzleMat");
+const matRoll = document.getElementById("matRoll");
 const memoryMorph = document.getElementById("memoryMorph");
 const morphShell = document.getElementById("morphShell");
 const morphPath = document.getElementById("morphPath");
@@ -80,33 +80,6 @@ function pathForBox(x1, y1, x2, y2, edges = {}) {
   ].join(" ");
 }
 
-const shapePaths = {
-  1: pathForBox(50, 50, 350, 350, { right: 1, bottom: -1 }),
-  2: pathForBox(50, 50, 350, 350, { top: 1, right: -1, left: -1 }),
-  3: pathForBox(50, 50, 350, 350, { right: -1, bottom: 1, left: -1 }),
-  4: pathForBox(50, 50, 350, 350, { top: -1, right: 1, left: 1 }),
-  5: pathForBox(50, 50, 350, 350, { bottom: -1, left: 1 }),
-  6: pathForBox(50, 50, 350, 350, { top: 1, left: -1 }),
-  "6-transformed": pathForBox(50, 50, 350, 350, { top: -1, right: 1, bottom: 1 }),
-  7: pathForBox(50, 50, 650, 350, { right: 1, bottom: -1 }),
-  8: pathForBox(50, 50, 350, 350, { right: -1, bottom: 1, left: -1 }),
-  9: pathForBox(50, 50, 350, 350, { bottom: -1, left: 1 })
-};
-
-const compoundSeam = "M350 50 V150 C350 162 398 150 398 200 C398 250 350 238 350 250 V350";
-
-const pieceDefinitions = [
-  { number: 1, x: "18%", y: "29%", w: "17%", h: "30.22%", rotation: "-7deg", z: 6 },
-  { number: 2, x: "29%", y: "70%", w: "17%", h: "30.22%", rotation: "6deg", z: 5 },
-  { number: 3, x: "44%", y: "28%", w: "17%", h: "30.22%", rotation: "4deg", z: 4 },
-  { number: 4, x: "84%", y: "72%", w: "15%", h: "26.67%", rotation: "-5deg", z: 9 },
-  { number: 5, x: "75%", y: "29%", w: "17%", h: "30.22%", rotation: "7deg", z: 3 },
-  { number: 6, x: "57%", y: "72%", w: "17%", h: "30.22%", rotation: "-6deg", z: 8 },
-  { number: 7, x: "25%", y: "50%", w: "32.67%", h: "33.19%", rotation: "-2deg", z: 12, wide: true },
-  { number: 8, x: "48%", y: "31%", w: "23%", h: "40.89%", rotation: "2deg", z: 13 },
-  { number: 9, x: "74%", y: "34%", w: "23%", h: "40.89%", rotation: "-2deg", z: 14 }
-];
-
 const photoRatios = new Map([
   [1, 9 / 16],
   [2, 9 / 16],
@@ -117,38 +90,59 @@ const photoRatios = new Map([
 ]);
 
 const boardSeams = {
-  top: "M480 0V50C480 62 448 54 448 86C448 118 480 110 480 122V150",
-  right: "M600 270H740C752 270 740 238 775 238C810 238 798 270 810 270H960",
-  bottom: "M480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540",
-  left: "M360 270H220C208 270 220 302 185 302C150 302 162 270 150 270H0",
-  center: "M480 150C496 150 494 120 525 120C590 120 636 170 650 225C654 242 640 252 625 246C610 240 600 250 600 270C600 290 610 300 625 294C640 288 654 298 650 315C636 370 590 420 525 420C494 420 496 390 480 390C464 390 466 420 435 420C370 420 324 370 310 315C306 298 320 288 335 294C350 300 360 290 360 270C360 250 350 240 335 246C320 252 306 242 310 225C324 170 370 120 435 120C466 120 464 150 480 150Z"
+  top: "M480 55V74C480 86 450 78 450 105C450 132 480 124 480 136V145",
+  right: "M598 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910",
+  bottom: "M480 395V404C480 416 510 408 510 435C510 462 480 454 480 466V485",
+  left: "M362 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50",
+  center: "M480 145C466 145 468 116 436 116C370 116 322 164 308 220C303 239 317 253 336 245C352 239 362 248 362 270C362 292 352 301 336 295C317 287 303 301 308 320C322 376 370 424 436 424C468 424 466 395 480 395C494 395 492 424 524 424C590 424 638 376 652 320C657 301 643 287 624 295C608 301 598 292 598 270C598 248 608 239 624 245C643 253 657 239 652 220C638 164 590 116 524 116C492 116 494 145 480 145Z"
 };
 
 const boardPaths = {
-  7: "M0 0H480V50C480 62 448 54 448 86C448 118 480 110 480 122V150C464 150 466 120 435 120C370 120 324 170 310 225C306 242 320 252 335 246C350 240 360 250 360 270H220C208 270 220 302 185 302C150 302 162 270 150 270H0Z",
-  8: "M480 0V50C480 62 448 54 448 86C448 118 480 110 480 122V150C496 150 494 120 525 120C590 120 636 170 650 225C654 242 640 252 625 246C610 240 600 250 600 270H740C752 270 740 238 775 238C810 238 798 270 810 270H960V0Z",
-  9: "M0 270H150C162 270 150 302 185 302C220 302 208 270 220 270H360C360 290 350 300 335 294C320 288 306 298 310 315C324 370 370 420 435 420C466 420 464 390 480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540H0Z",
-  6: "M960 270H810C798 270 810 238 775 238C740 238 752 270 740 270H600C600 290 610 300 625 294C640 288 654 298 650 315C636 370 590 420 525 420C494 420 496 390 480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540H960Z",
+  7: "M50 55H185C197 55 187 15 225 15C263 15 253 55 265 55H480V74C480 86 450 78 450 105C450 132 480 124 480 136V145C466 145 468 116 436 116C370 116 322 164 308 220C303 239 317 253 336 245C352 239 362 248 362 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50V205C50 193 10 203 10 165C10 127 50 137 50 125V55Z",
+  8: "M480 55H690C702 55 692 95 730 95C768 95 758 55 770 55H910V125C910 137 950 127 950 165C950 203 910 193 910 205V270H820C808 270 818 238 783 238C748 238 758 270 746 270H598C598 248 608 239 624 245C643 253 657 239 652 220C638 164 590 116 524 116C492 116 494 145 480 145V136C480 124 450 132 450 105C450 78 480 86 480 74V55Z",
+  9: "M50 270H140C152 270 142 238 177 238C212 238 202 270 214 270H362C362 292 352 301 336 295C317 287 303 301 308 320C322 376 370 424 436 424C468 424 466 395 480 395V404C480 416 510 408 510 435C510 462 480 454 480 466V485H265C253 485 263 525 225 525C187 525 197 485 185 485H50V415C50 403 10 413 10 375C10 337 50 347 50 335V270Z",
+  6: "M598 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910V335C910 347 950 337 950 375C950 413 910 403 910 415V485H770C758 485 768 525 730 525C692 525 702 485 690 485H480V466C480 454 510 462 510 435C510 408 480 416 480 404V395C494 395 492 424 524 424C590 424 638 376 652 320C657 301 643 287 624 295C608 301 598 292 598 270Z",
   10: boardSeams.center
 };
 
-const finalOuterPath = pathForBox(70, 80, 890, 460, {
-  top: 1,
-  right: -1,
-  bottom: 1,
-  left: -1
-});
+const finalOuterPath = "M50 55H185C197 55 187 15 225 15C263 15 253 55 265 55H480H690C702 55 692 95 730 95C768 95 758 55 770 55H910V125C910 137 950 127 950 165C950 203 910 193 910 205V335C910 347 950 337 950 375C950 413 910 403 910 415V485H770C758 485 768 525 730 525C692 525 702 485 690 485H480H265C253 485 263 525 225 525C187 525 197 485 185 485H50V415C50 403 10 413 10 375C10 337 50 347 50 335V205C50 193 10 203 10 165C10 127 50 137 50 125V55Z";
 
 const boardAssignments = [
-  { number: 7, path: boardPaths[7], imageBox: { x: 0, y: 0, width: 520, height: 320 } },
-  { number: 8, path: boardPaths[8], imageBox: { x: 440, y: 0, width: 520, height: 320 } },
-  { number: 9, path: boardPaths[9], imageBox: { x: 0, y: 220, width: 520, height: 320 } },
-  { number: 6, path: boardPaths[6], imageBox: { x: 440, y: 220, width: 520, height: 320 } },
-  { number: 10, path: boardPaths[10], imageBox: { x: 295, y: 105, width: 370, height: 330 } }
+  { number: 7, path: boardPaths[7], viewBox: "0 0 520 320", imageBox: { x: 0, y: 0, width: 520, height: 320 } },
+  { number: 8, path: boardPaths[8], viewBox: "440 0 520 320", imageBox: { x: 440, y: 0, width: 520, height: 320 } },
+  { number: 9, path: boardPaths[9], viewBox: "0 220 520 320", imageBox: { x: 0, y: 220, width: 520, height: 320 } },
+  { number: 6, path: boardPaths[6], viewBox: "440 220 520 320", imageBox: { x: 440, y: 220, width: 520, height: 320 } },
+  { number: 10, path: boardPaths[10], viewBox: "290 105 380 330", imageBox: { x: 290, y: 105, width: 380, height: 330 } }
+];
+
+const shapePaths = {
+  1: pathForBox(50, 50, 350, 350, { right: 1, bottom: -1 }),
+  2: pathForBox(50, 50, 350, 350, { top: 1, right: -1, left: -1 }),
+  3: pathForBox(50, 50, 350, 350, { right: -1, bottom: 1, left: -1 }),
+  4: pathForBox(50, 50, 350, 350, { top: -1, right: 1, left: 1 }),
+  5: pathForBox(50, 50, 350, 350, { bottom: -1, left: 1 }),
+  6: pathForBox(50, 50, 350, 350, { top: 1, left: -1 }),
+  7: boardPaths[7],
+  8: boardPaths[8],
+  9: boardPaths[9],
+  12: boardPaths[6]
+};
+
+const pieceDefinitions = [
+  { number: 1, x: "18%", y: "29%", w: "17%", h: "30.22%", rotation: "-7deg", z: 6, viewBox: "0 0 400 400", imageNumber: 1, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 2, x: "29%", y: "70%", w: "17%", h: "30.22%", rotation: "6deg", z: 5, viewBox: "0 0 400 400", imageNumber: 2, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 3, x: "44%", y: "28%", w: "17%", h: "30.22%", rotation: "4deg", z: 4, viewBox: "0 0 400 400", imageNumber: 3, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 4, x: "84%", y: "72%", w: "15%", h: "26.67%", rotation: "-5deg", z: 9, viewBox: "0 0 400 400", imageNumber: 4, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 5, x: "75%", y: "29%", w: "17%", h: "30.22%", rotation: "7deg", z: 3, viewBox: "0 0 400 400", imageNumber: 5, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 6, x: "57%", y: "72%", w: "17%", h: "30.22%", rotation: "-6deg", z: 8, viewBox: "0 0 400 400", imageNumber: 6, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 7, x: "26%", y: "49%", w: "28%", h: "30.63%", rotation: "-2deg", z: 12, viewBox: "0 0 520 320", imageNumber: 7, imageBox: { x: 0, y: 0, width: 520, height: 320 } },
+  { number: 8, x: "48%", y: "31%", w: "27%", h: "29.53%", rotation: "2deg", z: 13, viewBox: "440 0 520 320", imageNumber: 8, imageBox: { x: 440, y: 0, width: 520, height: 320 } },
+  { number: 9, x: "74%", y: "35%", w: "27%", h: "29.53%", rotation: "-2deg", z: 14, viewBox: "0 220 520 320", imageNumber: 9, imageBox: { x: 0, y: 220, width: 520, height: 320 } },
+  { number: 12, x: "62%", y: "70%", w: "27%", h: "29.53%", rotation: "-1deg", z: 15, viewBox: "440 220 520 320", imageNumber: 6, imageBox: { x: 440, y: 220, width: 520, height: 320 } }
 ];
 
 const stepLabels = [
-  "Unfold the puzzle mat and place the Mom memory",
+  "Unroll the puzzle mat and place the Mom memory",
   "Show the Dad memory",
   "Show the farm memory",
   "Show the tasting memory",
@@ -157,14 +151,13 @@ const stepLabels = [
   "Join the first two puzzle pieces",
   "Grow the farm puzzle piece",
   "Grow the friends puzzle piece",
-  "Transform the championship puzzle piece",
-  "Assemble four pieces around the center",
+  "Transform the championship piece and assemble the four outer pieces",
   "Complete the puzzle with the center piece",
   "Reveal the final photograph"
 ];
 
 const completionMessages = [
-  "Puzzle mat unfolded and Mom memory placed",
+  "Puzzle mat unrolled and Mom memory placed",
   "Dad memory placed",
   "Farm memory placed",
   "Tasting memory placed",
@@ -173,8 +166,7 @@ const completionMessages = [
   "The first two pieces joined and changed",
   "The farm piece grew and changed",
   "The friends piece grew and changed",
-  "The championship piece changed shape",
-  "Four pieces assembled around the center",
+  "The championship piece changed and all four outer pieces assembled",
   "The center piece completed the puzzle",
   "The final photograph is displayed as a puzzle"
 ];
@@ -182,35 +174,47 @@ const completionMessages = [
 function buildLoosePieces() {
   pieceArea.innerHTML = pieceDefinitions.map((definition) => {
     const number = definition.number;
-    const viewBox = definition.wide ? "0 0 700 400" : "0 0 400 400";
-    const imageWidth = definition.wide ? 700 : 400;
-    const seam = number === 7 ? `<path class="piece-seam" d="${compoundSeam}"></path>` : "";
+    const imageNumber = definition.imageNumber;
+    const imageBox = definition.imageBox;
+    const path = shapePaths[number];
     return `
       <figure
-        class="puzzle-piece${definition.wide ? " compound-piece" : ""}"
+        class="puzzle-piece"
         data-piece="${number}"
         style="--x:${definition.x};--y:${definition.y};--w:${definition.w};--h:${definition.h};--rotation:${definition.rotation};--z:${definition.z};"
         hidden
       >
-        <svg viewBox="${viewBox}" preserveAspectRatio="none">
+        <svg viewBox="${definition.viewBox}" preserveAspectRatio="none">
           <defs>
             <clipPath id="piece-${number}-clip">
-              <path class="piece-clip" d="${shapePaths[number]}"></path>
+              <path class="piece-clip" d="${path}"></path>
             </clipPath>
+            <linearGradient id="piece-${number}-cardboard" x1="0" y1="0" x2="0.82" y2="1">
+              <stop offset="0" stop-color="#d2aa80"></stop>
+              <stop offset="0.46" stop-color="#986942"></stop>
+              <stop offset="1" stop-color="#53351f"></stop>
+            </linearGradient>
+            <linearGradient id="piece-${number}-sheen" x1="0" y1="0" x2="0.76" y2="1">
+              <stop offset="0" stop-color="#fff" stop-opacity="0.22"></stop>
+              <stop offset="0.28" stop-color="#fff" stop-opacity="0.025"></stop>
+              <stop offset="0.72" stop-color="#000" stop-opacity="0.04"></stop>
+              <stop offset="1" stop-color="#000" stop-opacity="0.2"></stop>
+            </linearGradient>
           </defs>
-          <path class="piece-depth piece-depth--back" d="${shapePaths[number]}"></path>
-          <path class="piece-depth piece-depth--cardboard" d="${shapePaths[number]}"></path>
+          <path class="piece-depth piece-depth--back" d="${path}"></path>
+          <path class="piece-depth piece-depth--cardboard" d="${path}" style="fill:url(#piece-${number}-cardboard)"></path>
+          <path class="piece-depth piece-depth--bevel" d="${path}"></path>
           <image
-            href="assets/images/photo${number}.jpg"
-            x="0"
-            y="0"
-            width="${imageWidth}"
-            height="400"
+            href="assets/images/photo${imageNumber}.jpg"
+            x="${imageBox.x}"
+            y="${imageBox.y}"
+            width="${imageBox.width}"
+            height="${imageBox.height}"
             preserveAspectRatio="xMidYMid slice"
             clip-path="url(#piece-${number}-clip)"
           ></image>
-          <path class="piece-edge" d="${shapePaths[number]}"></path>
-          ${seam}
+          <path class="piece-sheen" d="${path}" fill="url(#piece-${number}-sheen)" clip-path="url(#piece-${number}-clip)"></path>
+          <path class="piece-edge" d="${path}"></path>
         </svg>
       </figure>`;
   }).join("");
@@ -234,7 +238,8 @@ function buildAssemblyBoard() {
   const groups = boardAssignments.map(({ number, path, imageBox }) => `
     <g class="assembly-piece" data-assembly-piece="${number}">
       <path class="assembly-depth assembly-depth--back" d="${path}"></path>
-      <path class="assembly-depth assembly-depth--cardboard" d="${path}"></path>
+      <path class="assembly-depth assembly-depth--cardboard" d="${path}" style="fill:url(#assembly-cardboard)"></path>
+      <path class="assembly-depth assembly-depth--bevel" d="${path}"></path>
       <image
         href="assets/images/photo${number}.jpg"
         x="${imageBox.x}"
@@ -244,12 +249,26 @@ function buildAssemblyBoard() {
         preserveAspectRatio="xMidYMid slice"
         clip-path="url(#assembly-clip-${number})"
       ></image>
+      <path class="assembly-sheen" d="${path}" fill="url(#assembly-sheen)" clip-path="url(#assembly-clip-${number})"></path>
       <path class="assembly-edge" d="${path}"></path>
     </g>`).join("");
 
   assemblyBoard.innerHTML = `
     <svg viewBox="0 0 960 540" preserveAspectRatio="none">
-      <defs>${clips}</defs>
+      <defs>
+        ${clips}
+        <linearGradient id="assembly-cardboard" x1="0" y1="0" x2="0.82" y2="1">
+          <stop offset="0" stop-color="#d2aa80"></stop>
+          <stop offset="0.46" stop-color="#986942"></stop>
+          <stop offset="1" stop-color="#53351f"></stop>
+        </linearGradient>
+        <linearGradient id="assembly-sheen" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0.2"></stop>
+          <stop offset="0.3" stop-color="#fff" stop-opacity="0.025"></stop>
+          <stop offset="0.72" stop-color="#000" stop-opacity="0.035"></stop>
+          <stop offset="1" stop-color="#000" stop-opacity="0.2"></stop>
+        </linearGradient>
+      </defs>
       ${groups}
     </svg>`;
 }
@@ -258,8 +277,11 @@ function buildFinalBoard() {
   const clips = boardAssignments.map(({ number, path }) =>
     `<clipPath id="final-clip-${number}"><path d="${path}"></path></clipPath>`
   ).join("");
-  const groups = boardAssignments.map(({ number }) => `
-    <g class="final-region" data-final-region="${number}" clip-path="url(#final-clip-${number})">
+  const groups = boardAssignments.map(({ number, path }) => `
+    <g class="final-region" data-final-region="${number}">
+      <path class="final-piece-depth final-piece-depth--back" d="${path}"></path>
+      <path class="final-piece-depth final-piece-depth--cardboard" d="${path}" style="fill:url(#final-cardboard)"></path>
+      <path class="final-piece-depth final-piece-depth--bevel" d="${path}"></path>
       <image
         class="final-photo"
         href="assets/images/photo11.jpg"
@@ -268,7 +290,10 @@ function buildFinalBoard() {
         width="960"
         height="540"
         preserveAspectRatio="xMidYMid slice"
+        clip-path="url(#final-clip-${number})"
       ></image>
+      <path class="final-piece-sheen" d="${path}" fill="url(#final-piece-sheen)" clip-path="url(#final-clip-${number})"></path>
+      <path class="final-piece-edge" d="${path}"></path>
     </g>`).join("");
 
   finalBoard.innerHTML = `
@@ -280,15 +305,21 @@ function buildFinalBoard() {
           <stop offset="52%" stop-color="#000" stop-opacity="0"></stop>
           <stop offset="100%" stop-color="#000" stop-opacity="0.36"></stop>
         </radialGradient>
+        <linearGradient id="final-cardboard" x1="0" y1="0" x2="0.82" y2="1">
+          <stop offset="0" stop-color="#d2aa80"></stop>
+          <stop offset="0.46" stop-color="#986942"></stop>
+          <stop offset="1" stop-color="#53351f"></stop>
+        </linearGradient>
+        <linearGradient id="final-piece-sheen" x1="0" y1="0" x2="0.8" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0.18"></stop>
+          <stop offset="0.3" stop-color="#fff" stop-opacity="0.02"></stop>
+          <stop offset="0.75" stop-color="#000" stop-opacity="0.04"></stop>
+          <stop offset="1" stop-color="#000" stop-opacity="0.18"></stop>
+        </linearGradient>
       </defs>
-      <path class="final-depth final-depth--back" d="${finalOuterPath}"></path>
-      <path class="final-depth final-depth--cardboard" d="${finalOuterPath}"></path>
-      <path class="final-back-face" d="${finalOuterPath}"></path>
-      <g class="final-face" clip-path="url(#final-outer-clip)">
-        ${groups}
-        <rect class="final-shade" width="960" height="540"></rect>
-        ${seamMarkup("final-seams")}
-      </g>
+      ${groups}
+      <path class="final-shade" d="${finalOuterPath}" fill="url(#final-vignette)"></path>
+      ${seamMarkup("final-seams")}
       <path class="final-outer-edge" d="${finalOuterPath}"></path>
     </svg>`;
 }
@@ -392,11 +423,11 @@ function resetPuzzle({ announce = true } = {}) {
   currentStep = 0;
 
   stage.classList.remove("is-mat-open", "is-assembled", "is-complete", "is-final");
-  stage.classList.add("is-empty", "is-folded");
+  stage.classList.add("is-empty", "is-rolled");
 
-  [matScene, matShadow, matPanelLeft, matPanelRight, matStrap].forEach((element) => {
+  [matScene, matShadow, puzzleMat, matRoll].forEach((element) => {
     cancelAnimations(element, true);
-    clearStyle(element, ["opacity", "filter", "transform"]);
+    clearStyle(element, ["left", "opacity", "filter", "transform"]);
   });
 
   for (const [number, piece] of pieces) {
@@ -407,8 +438,9 @@ function resetPuzzle({ announce = true } = {}) {
     [
       piece.querySelector(".piece-clip"),
       piece.querySelector(".piece-edge"),
+      piece.querySelector(".piece-sheen"),
       ...piece.querySelectorAll(".piece-depth")
-    ].forEach((path) => {
+    ].filter(Boolean).forEach((path) => {
       path._morphVersion = (path._morphVersion || 0) + 1;
       path.querySelectorAll("animate").forEach((animation) => animation.remove());
       path.setAttribute("d", basePath);
@@ -507,65 +539,55 @@ function snapAt(left, top, width = "18%", duration = motionDuration(430, 70)) {
   );
 }
 
-async function unfoldMat(token) {
+async function unrollMat(token) {
   const duration = motionDuration(2320, 120);
-  const strapDuration = motionDuration(820, 60);
 
-  const strap = matStrap.animate(
+  const surface = puzzleMat.animate(
     [
-      { opacity: 1, transform: "translateX(-50%) scaleX(1)" },
-      { opacity: 0, transform: "translateX(-50%) scaleX(.56)" }
+      { opacity: 0.38, filter: "brightness(.58)", transform: "scaleX(.018)" },
+      { opacity: 0.9, filter: "brightness(.86)", transform: "scaleX(.54)", offset: 0.48 },
+      { opacity: 1, filter: "brightness(1.04)", transform: "scaleX(1.008)", offset: 0.9 },
+      { opacity: 1, filter: "brightness(1)", transform: "scaleX(1)" }
     ],
-    { duration: strapDuration, easing: "ease-in", fill: "forwards" }
+    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
   );
 
-  const left = matPanelLeft.animate(
+  const roll = matRoll.animate(
     [
-      { transform: "rotateY(178deg)", filter: "brightness(.68)" },
-      { transform: "rotateY(178deg)", filter: "brightness(.7)", offset: 0.12 },
-      { transform: "translateX(0) rotateY(-5deg)", filter: "brightness(1.04)", offset: 0.86 },
-      { transform: "translateX(0) rotateY(0deg)", filter: "brightness(1)" }
+      { left: "0%", opacity: 1, filter: "brightness(.72)", transform: "translateX(-18%) scaleX(1.04)" },
+      { left: "48%", opacity: 1, filter: "brightness(1.08)", transform: "translateX(-50%) scaleX(.94)", offset: 0.48 },
+      { left: "96.5%", opacity: 1, filter: "brightness(.9)", transform: "translateX(-64%) scaleX(.8)", offset: 0.9 },
+      { left: "100%", opacity: 0, filter: "brightness(.68)", transform: "translateX(-72%) scaleX(.66)" }
     ],
-    { duration, easing: "cubic-bezier(.2,.68,.2,1)", fill: "forwards" }
-  );
-
-  const right = matPanelRight.animate(
-    [
-      { transform: "rotateY(-178deg)", filter: "brightness(.75)" },
-      { transform: "rotateY(-178deg)", filter: "brightness(.76)", offset: 0.2 },
-      { transform: "translateX(0) rotateY(5deg)", filter: "brightness(1.04)", offset: 0.88 },
-      { transform: "translateX(0) rotateY(0deg)", filter: "brightness(1)" }
-    ],
-    { duration, easing: "cubic-bezier(.2,.68,.2,1)", fill: "forwards" }
+    { duration, easing: "cubic-bezier(.24,.78,.2,1)", fill: "forwards" }
   );
 
   const scene = matScene.animate(
     [
-      { transform: "rotateX(7deg) rotateZ(-3.25deg) scale(.79)" },
-      { transform: "rotateX(3deg) rotateZ(-1deg) scale(.96)", offset: 0.78 },
-      { transform: "rotateX(1.5deg) rotateZ(-.35deg) scale(1)" }
+      { transform: "rotateX(4deg) rotateZ(-1.15deg) scale(.92)" },
+      { transform: "rotateX(1.6deg) rotateZ(-.3deg) scale(1.004)", offset: 0.9 },
+      { transform: "rotateX(1.25deg) rotateZ(-.25deg) scale(1)" }
     ],
-    { duration, easing: "cubic-bezier(.18,.72,.2,1)", fill: "forwards" }
+    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
   );
 
   const shadow = matShadow.animate(
     [
-      { opacity: 0.48, transform: "translateY(2.6%) scale(.44)", filter: "blur(1.4vw)" },
-      { opacity: 0.72, transform: "translateY(2.1%) scale(.98)", filter: "blur(2vw)" }
+      { opacity: 0.5, transform: "translateY(2.6%) scaleX(.035) scaleY(.94)", filter: "blur(1.3vw)" },
+      { opacity: 0.82, transform: "translateY(2.35%) scaleX(.985) scaleY(.98)", filter: "blur(2.1vw)" }
     ],
-    { duration, easing: "ease-out", fill: "forwards" }
+    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
   );
 
-  await waitForAnimations([strap, left, right, scene, shadow]);
+  await waitForAnimations([surface, roll, scene, shadow]);
   if (token !== runId) return false;
 
-  [matStrap, matPanelLeft, matPanelRight, matScene, matShadow].forEach((element) => cancelAnimations(element));
-  clearStyle(matStrap, ["opacity", "transform"]);
-  clearStyle(matPanelLeft, ["filter", "transform"]);
-  clearStyle(matPanelRight, ["filter", "transform"]);
+  [puzzleMat, matRoll, matScene, matShadow].forEach((element) => cancelAnimations(element));
+  clearStyle(puzzleMat, ["opacity", "filter", "transform"]);
+  clearStyle(matRoll, ["left", "opacity", "filter", "transform"]);
   clearStyle(matScene, ["transform"]);
   clearStyle(matShadow, ["opacity", "filter", "transform"]);
-  stage.classList.remove("is-folded");
+  stage.classList.remove("is-rolled");
   stage.classList.add("is-mat-open");
   return true;
 }
@@ -753,7 +775,7 @@ function animatePieceTo(piece, layout, duration, delay = 0, options = {}) {
     {
       duration,
       delay,
-      easing: "cubic-bezier(.28,.02,.18,1)",
+      easing: "cubic-bezier(.22,.82,.2,1)",
       fill: "forwards"
     }
   );
@@ -881,34 +903,51 @@ async function growMemory(sourceNumber, resultNumber, token) {
 }
 
 async function transformSix(token) {
-  const piece = pieces.get(6);
-  const clip = piece.querySelector(".piece-clip");
-  const edge = piece.querySelector(".piece-edge");
-  const depthPaths = [...piece.querySelectorAll(".piece-depth")];
-  const fromPath = shapePaths[6];
-  const toPath = shapePaths["6-transformed"];
+  const source = pieces.get(6);
+  const result = pieces.get(12);
   const duration = motionDuration(1980, 100);
-  const layout = { left: "61%", top: "70%", width: "23%", height: "40.89%" };
+  const layout = {
+    left: cssValue(result, "--x"),
+    top: cssValue(result, "--y"),
+    width: cssValue(result, "--w"),
+    height: cssValue(result, "--h")
+  };
+  const rotation = cssValue(result, "--rotation") || "0deg";
 
-  const movement = animatePieceTo(piece, layout, duration, 0, {
-    rotation: "-1deg",
-    overshoot: 1.035
+  result.hidden = false;
+  result.style.left = layout.left;
+  result.style.top = layout.top;
+  result.style.width = layout.width;
+  result.style.height = layout.height;
+  result.style.opacity = "0";
+  result.style.filter = "brightness(1.16) blur(3px)";
+  result.style.transform = `translate(-50%, -50%) rotate(${rotation}) scale(.86)`;
+
+  const movement = animatePieceTo(source, layout, duration, 0, {
+    rotation,
+    overshoot: 1.025,
+    opacity: 0
   });
+  const reveal = result.animate(
+    [
+      { opacity: 0, filter: "brightness(1.16) blur(3px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.86)` },
+      { opacity: 0, filter: "brightness(1.12) blur(2px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.92)`, offset: 0.34 },
+      { opacity: 1, filter: "brightness(1.04) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1.018)`, offset: 0.88 },
+      { opacity: 1, filter: "brightness(1) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1)` }
+    ],
+    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
+  );
   const glow = snapAt(layout.left, layout.top, "23%", duration);
 
-  await Promise.all([
-    waitForAnimations([movement, glow]),
-    morphSvgPath(clip, fromPath, toPath, duration),
-    ...depthPaths.map((path) => morphSvgPath(path, fromPath, toPath, duration)),
-    morphSvgPath(edge, fromPath, toPath, duration)
-  ]);
+  await waitForAnimations([movement, reveal, glow]);
   if (token !== runId) return false;
 
-  cancelAnimations(piece);
-  commitPieceLayout(piece, layout, "-1deg");
-  clip.setAttribute("d", toPath);
-  depthPaths.forEach((path) => path.setAttribute("d", toPath));
-  edge.setAttribute("d", toPath);
+  cancelAnimations(source);
+  clearPieceState(source);
+  source.hidden = true;
+  cancelAnimations(result);
+  clearPieceState(result);
+  result.hidden = false;
   return true;
 }
 
@@ -939,7 +978,7 @@ function fadeLoosePiece(piece, destination, duration, delay = 0) {
         transform: "translate(-50%, -50%) rotate(0deg) scale(.98)"
       }
     ],
-    { duration, delay, easing: "cubic-bezier(.34,.02,.18,1)", fill: "forwards" }
+    { duration, delay, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
   );
 }
 
@@ -947,16 +986,16 @@ async function assembleOuterPieces(token) {
   const duration = motionDuration(2180, 120);
   const stagger = reduceMotion.matches ? 0 : 65;
   const sequence = [
-    { number: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "25%", top: "25%" } },
-    { number: 8, start: "translate(18%,-18%) scale(.82) rotate(2deg)", destination: { left: "75%", top: "25%" } },
-    { number: 9, start: "translate(-18%,18%) scale(.82) rotate(2deg)", destination: { left: "25%", top: "75%" } },
-    { number: 6, start: "translate(18%,18%) scale(.82) rotate(-2deg)", destination: { left: "75%", top: "75%" } }
+    { number: 7, looseNumber: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "32%", top: "33%" } },
+    { number: 8, looseNumber: 8, start: "translate(18%,-18%) scale(.82) rotate(2deg)", destination: { left: "68%", top: "33%" } },
+    { number: 9, looseNumber: 9, start: "translate(-18%,18%) scale(.82) rotate(2deg)", destination: { left: "32%", top: "67%" } },
+    { number: 6, looseNumber: 12, start: "translate(18%,18%) scale(.82) rotate(-2deg)", destination: { left: "68%", top: "67%" } }
   ];
 
   assemblyBoard.hidden = false;
   const animations = [];
-  sequence.forEach(({ number, start, destination }, index) => {
-    const loose = pieces.get(number);
+  sequence.forEach(({ number, looseNumber, start, destination }, index) => {
+    const loose = pieces.get(looseNumber);
     const assembled = assemblyPieces.get(number);
     const delay = index * stagger;
     assembled.style.opacity = "0";
@@ -968,7 +1007,7 @@ async function assembleOuterPieces(token) {
         { opacity: 1, filter: "brightness(1.08) blur(0px)", transform: "translate(0,0) scale(1.018) rotate(0deg)", offset: 0.84 },
         { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(0,0) scale(1) rotate(0deg)" }
       ],
-      { duration, delay, easing: "cubic-bezier(.28,.02,.18,1)", fill: "forwards" }
+      { duration, delay, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
     ));
   });
   animations.push(snapAt("50%", "50%", "62%", duration + stagger * 3));
@@ -976,8 +1015,8 @@ async function assembleOuterPieces(token) {
   await waitForAnimations(animations);
   if (token !== runId) return false;
 
-  sequence.forEach(({ number }) => {
-    const loose = pieces.get(number);
+  sequence.forEach(({ number, looseNumber }) => {
+    const loose = pieces.get(looseNumber);
     const assembled = assemblyPieces.get(number);
     cancelAnimations(loose);
     clearPieceState(loose);
@@ -1037,85 +1076,90 @@ async function completeCenterPiece(token) {
 }
 
 async function revealFinalPhotograph(token) {
-  const boardSwapDuration = motionDuration(1800, 90);
-  const regionDuration = motionDuration(4200, 120);
-  const regionStagger = reduceMotion.matches ? 0 : 2250;
-  const finishDuration = motionDuration(3000, 120);
-  const finishDelay = reduceMotion.matches ? 0 : 12000;
-  const revealOrder = [7, 8, 10, 9, 6];
+  const totalDuration = 15000;
+  const pieceDuration = reduceMotion.matches ? 160 : totalDuration / 5;
+  const halfTurn = pieceDuration / 2;
+  const finishDuration = reduceMotion.matches ? 90 : 1000;
+  const finishDelay = reduceMotion.matches ? 0 : totalDuration - finishDuration;
+  const revealOrder = [7, 8, 9, 6, 10];
 
   finalBoard.hidden = false;
-  finalBoard.style.opacity = "0";
-  finalBoard.style.transform = "perspective(1400px) rotateY(-88deg) scale(.96)";
-  finalBoard.style.transformOrigin = "50% 50%";
+  finalBoard.style.opacity = "1";
+  finalBoard.style.filter = "brightness(1)";
+  finalBoard.style.transform = "none";
   finalRegions.forEach((region) => {
     region.style.opacity = "0";
-    region.style.transform = "rotateY(92deg) scale(.94)";
-    region.style.filter = "sepia(.7) brightness(.48) blur(4px)";
+    region.style.transform = "rotateY(-90deg) scale(.975)";
+    region.style.filter = "brightness(.68)";
   });
   finalSeams.style.opacity = "0";
   finalShade.style.opacity = "0";
   finalOuterEdge.style.opacity = "0";
 
-  const assemblyExit = assemblyBoard.animate(
-    [
-      { opacity: 1, filter: "brightness(1)", transform: "perspective(1400px) rotateY(0deg) scale(1)" },
-      { opacity: 0, filter: "brightness(.62)", transform: "perspective(1400px) rotateY(88deg) scale(.96)" }
-    ],
-    { duration: boardSwapDuration, easing: "cubic-bezier(.55,.05,.72,.28)", fill: "forwards" }
-  );
-
-  const boardEntrance = finalBoard.animate(
-    [
-      { opacity: 0, filter: "brightness(.55)", transform: "perspective(1400px) rotateY(-88deg) scale(.96)" },
-      { opacity: 1, filter: "brightness(1)", transform: "perspective(1400px) rotateY(0deg) scale(1)" }
-    ],
-    { duration: boardSwapDuration, easing: "cubic-bezier(.18,.72,.22,1)", fill: "forwards" }
-  );
-
-  const edgeReveal = finalOuterEdge.animate(
-    [{ opacity: 0 }, { opacity: 0.25, offset: 0.42 }, { opacity: 1 }],
-    { duration: boardSwapDuration, easing: "ease-out", fill: "forwards" }
-  );
-
-  const regionAnimations = revealOrder.map((number, index) => {
+  const flipAnimations = [];
+  revealOrder.forEach((number, index) => {
+    const oldPiece = assemblyPieces.get(number);
+    const newPiece = finalRegions.get(number);
     const direction = index % 2 === 0 ? 1 : -1;
-    return finalRegions.get(number).animate(
+    const delay = reduceMotion.matches ? index * pieceDuration : index * pieceDuration;
+
+    flipAnimations.push(oldPiece.animate(
       [
         {
-          opacity: 0,
-          filter: "sepia(.72) brightness(.42) blur(4px)",
-          transform: `rotateY(${direction * 92}deg) scale(.94)`
-        },
-        {
-          opacity: 0.18,
-          filter: "sepia(.58) brightness(.7) blur(3px)",
-          transform: `rotateY(${direction * 76}deg) scale(.96)`,
-          offset: 0.38
+          opacity: 1,
+          filter: "brightness(1)",
+          transform: "perspective(1500px) rotateY(0deg) translateZ(0) scale(1)"
         },
         {
           opacity: 1,
-          filter: "sepia(.06) brightness(1.07) blur(0px)",
-          transform: `rotateY(${direction * -5}deg) scale(1.018)`,
+          filter: "brightness(.78)",
+          transform: `perspective(1500px) rotateY(${direction * 72}deg) translateZ(10px) scale(.985)`,
+          offset: 0.8
+        },
+        {
+          opacity: 0,
+          filter: "brightness(.52)",
+          transform: `perspective(1500px) rotateY(${direction * 90}deg) translateZ(4px) scale(.975)`
+        }
+      ],
+      {
+        duration: halfTurn,
+        delay,
+        easing: "cubic-bezier(.55,.08,.72,.34)",
+        fill: "forwards"
+      }
+    ));
+
+    flipAnimations.push(newPiece.animate(
+      [
+        {
+          opacity: 0,
+          filter: "brightness(.52)",
+          transform: `perspective(1500px) rotateY(${direction * -90}deg) translateZ(4px) scale(.975)`
+        },
+        {
+          opacity: 1,
+          filter: "brightness(1.08)",
+          transform: `perspective(1500px) rotateY(${direction * -8}deg) translateZ(10px) scale(1.012)`,
           offset: 0.84
         },
         {
           opacity: 1,
-          filter: "sepia(0) brightness(1) blur(0px)",
-          transform: "rotateY(0deg) scale(1)"
+          filter: "brightness(1)",
+          transform: "perspective(1500px) rotateY(0deg) translateZ(0) scale(1)"
         }
       ],
       {
-        duration: regionDuration,
-        delay: boardSwapDuration + index * regionStagger,
-        easing: "cubic-bezier(.18,.74,.22,1)",
+        duration: halfTurn,
+        delay: delay + halfTurn,
+        easing: "cubic-bezier(.18,.76,.22,1)",
         fill: "forwards"
       }
-    );
+    ));
   });
 
   const seamsReveal = finalSeams.animate(
-    [{ opacity: 0 }, { opacity: 0, offset: 0.28 }, { opacity: 1 }],
+    [{ opacity: 0 }, { opacity: 1 }],
     {
       duration: finishDuration,
       delay: finishDelay,
@@ -1124,7 +1168,16 @@ async function revealFinalPhotograph(token) {
     }
   );
   const shadeReveal = finalShade.animate(
-    [{ opacity: 0 }, { opacity: 0.08, offset: 0.32 }, { opacity: 0.38 }],
+    [{ opacity: 0 }, { opacity: 0.3 }],
+    {
+      duration: finishDuration,
+      delay: finishDelay,
+      easing: "ease-out",
+      fill: "forwards"
+    }
+  );
+  const edgeReveal = finalOuterEdge.animate(
+    [{ opacity: 0 }, { opacity: 1 }],
     {
       duration: finishDuration,
       delay: finishDelay,
@@ -1134,10 +1187,8 @@ async function revealFinalPhotograph(token) {
   );
 
   await waitForAnimations([
-    assemblyExit,
-    boardEntrance,
+    ...flipAnimations,
     edgeReveal,
-    ...regionAnimations,
     seamsReveal,
     shadeReveal
   ]);
@@ -1153,35 +1204,42 @@ async function revealFinalPhotograph(token) {
   finalRegions.forEach((region) => {
     cancelAnimations(region);
     region.style.opacity = "1";
-    region.style.filter = "sepia(0) brightness(1) blur(0px)";
-    region.style.transform = "rotateY(0deg) scale(1)";
+    region.style.filter = "brightness(1)";
+    region.style.transform = "perspective(1500px) rotateY(0deg) translateZ(0) scale(1)";
   });
   cancelAnimations(finalSeams);
   finalSeams.style.opacity = "1";
   cancelAnimations(finalShade);
-  finalShade.style.opacity = "0.38";
+  finalShade.style.opacity = "0.3";
   cancelAnimations(finalOuterEdge);
   finalOuterEdge.style.opacity = "1";
   stage.classList.add("is-final");
   return true;
 }
 
-async function unfoldAndPlaceFirstMemory(token) {
-  const unfolded = await unfoldMat(token);
-  if (!unfolded || token !== runId) return false;
+async function unrollAndPlaceFirstMemory(token) {
+  const unrolled = await unrollMat(token);
+  if (!unrolled || token !== runId) return false;
   return revealMemory(1, token);
 }
 
+async function transformAndAssemble(token) {
+  const transformed = await transformSix(token);
+  if (!transformed || token !== runId) return false;
+  await pause(motionDuration(260, 0));
+  if (token !== runId) return false;
+  return assembleOuterPieces(token);
+}
+
 async function runCurrentStep(token) {
-  if (currentStep === 0) return unfoldAndPlaceFirstMemory(token);
+  if (currentStep === 0) return unrollAndPlaceFirstMemory(token);
   if (currentStep >= 1 && currentStep <= 5) return revealMemory(currentStep + 1, token);
   if (currentStep === 6) return mergeFirstPair(token);
   if (currentStep === 7) return growMemory(3, 8, token);
   if (currentStep === 8) return growMemory(5, 9, token);
-  if (currentStep === 9) return transformSix(token);
-  if (currentStep === 10) return assembleOuterPieces(token);
-  if (currentStep === 11) return completeCenterPiece(token);
-  if (currentStep === 12) return revealFinalPhotograph(token);
+  if (currentStep === 9) return transformAndAssemble(token);
+  if (currentStep === 10) return completeCenterPiece(token);
+  if (currentStep === 11) return revealFinalPhotograph(token);
   return false;
 }
 
@@ -1202,11 +1260,60 @@ async function advancePuzzle() {
   updateInterface();
 }
 
+function fullscreenElement() {
+  return document.fullscreenElement || document.webkitFullscreenElement || null;
+}
+
+function updateFullscreenControl() {
+  const active = Boolean(fullscreenElement()) || document.body.classList.contains("is-pseudo-fullscreen");
+  fullscreenButton.setAttribute("aria-pressed", String(active));
+  fullscreenButton.setAttribute("aria-label", active ? "Exit fullscreen" : "Enter fullscreen");
+}
+
+async function toggleFullscreen() {
+  if (fullscreenElement()) {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (exit) {
+      try {
+        await exit.call(document);
+      } catch {
+        document.body.classList.remove("is-pseudo-fullscreen");
+      }
+    }
+    updateFullscreenControl();
+    return;
+  }
+
+  if (document.body.classList.contains("is-pseudo-fullscreen")) {
+    document.body.classList.remove("is-pseudo-fullscreen");
+    updateFullscreenControl();
+    return;
+  }
+
+  const request = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+  if (request) {
+    try {
+      await request.call(document.documentElement);
+    } catch {
+      document.body.classList.add("is-pseudo-fullscreen");
+    }
+  } else {
+    document.body.classList.add("is-pseudo-fullscreen");
+  }
+  updateFullscreenControl();
+}
+
 advanceControl.addEventListener("click", advancePuzzle);
 restartButton.addEventListener("click", (event) => {
   event.stopPropagation();
   resetPuzzle();
 });
+fullscreenButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  toggleFullscreen();
+});
+document.addEventListener("fullscreenchange", updateFullscreenControl);
+document.addEventListener("webkitfullscreenchange", updateFullscreenControl);
 
 const imagePromises = Array.from({ length: 11 }, (_, index) => {
   const source = `assets/images/photo${index + 1}.jpg`;

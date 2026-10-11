@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#100d0b">
+    <meta name="theme-color" content="#050505">
     <title>Memory Puzzle</title>
-    <link rel="stylesheet" href="styles.css?v=20261011-1">
-    <script src="script.js?v=20261011-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261011-2">
+    <script src="script.js?v=20261011-2" defer></script>
   </head>
 
   <body>
     <main class="page-shell">
       <section
-        class="puzzle-stage is-loading is-empty is-folded"
+        class="puzzle-stage is-loading is-empty is-rolled"
         id="puzzleStage"
         aria-label="Interactive memory puzzle"
       >
@@ -23,16 +23,33 @@
           class="advance-control"
           id="advanceControl"
           type="button"
-          aria-label="Unfold the puzzle mat and place the Mom memory"
+          aria-label="Unroll the puzzle mat and place the Mom memory"
           aria-describedby="puzzleStatus"
           disabled
         ></button>
 
-        <button class="restart-button" id="restartButton" type="button" aria-label="Restart puzzle">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5.2 8.2A8 8 0 1 1 4.5 15M5.2 8.2V3.8M5.2 8.2h4.4"></path>
-          </svg>
-        </button>
+        <div class="stage-controls">
+          <button
+            class="icon-button fullscreen-button"
+            id="fullscreenButton"
+            type="button"
+            aria-label="Enter fullscreen"
+            aria-pressed="false"
+          >
+            <svg class="fullscreen-icon fullscreen-icon--enter" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4.5 9V4.5H9M15 4.5h4.5V9M19.5 15v4.5H15M9 19.5H4.5V15"></path>
+            </svg>
+            <svg class="fullscreen-icon fullscreen-icon--exit" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 4.5V9H4.5M19.5 9H15V4.5M15 19.5V15h4.5M4.5 15H9v4.5"></path>
+            </svg>
+          </button>
+
+          <button class="icon-button restart-button" id="restartButton" type="button" aria-label="Restart puzzle">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5.2 8.2A8 8 0 1 1 4.5 15M5.2 8.2V3.8M5.2 8.2h4.4"></path>
+            </svg>
+          </button>
+        </div>
 
         <div class="tap-indicator" id="tapIndicator" aria-hidden="true">
           <span></span>
@@ -41,14 +58,17 @@
         <div class="mat-scene" id="matScene" aria-hidden="true">
           <div class="mat-shadow" id="matShadow"></div>
           <div class="puzzle-mat" id="puzzleMat">
-            <span class="mat-panel mat-panel--left" id="matPanelLeft"></span>
-            <span class="mat-panel mat-panel--center"></span>
-            <span class="mat-panel mat-panel--right" id="matPanelRight"></span>
+            <span class="mat-felt"></span>
             <span class="mat-stitching"></span>
-            <span class="mat-crease mat-crease--left"></span>
-            <span class="mat-crease mat-crease--right"></span>
+            <span class="mat-wrinkle mat-wrinkle--one"></span>
+            <span class="mat-wrinkle mat-wrinkle--two"></span>
+            <span class="mat-wrinkle mat-wrinkle--three"></span>
           </div>
-          <div class="mat-strap" id="matStrap"><span></span></div>
+          <div class="mat-roll" id="matRoll">
+            <span class="mat-roll__body"></span>
+            <span class="mat-roll__cap mat-roll__cap--top"></span>
+            <span class="mat-roll__cap mat-roll__cap--bottom"></span>
+          </div>
         </div>
 
         <div class="piece-area" id="pieceArea" aria-hidden="true"></div>
