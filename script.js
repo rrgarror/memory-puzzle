@@ -15,6 +15,7 @@ const matStrap = document.getElementById("matStrap");
 const memoryMorph = document.getElementById("memoryMorph");
 const morphShell = document.getElementById("morphShell");
 const morphPath = document.getElementById("morphPath");
+const morphDepth = document.getElementById("morphDepth");
 const morphEdge = document.getElementById("morphEdge");
 const morphFullImage = document.getElementById("morphFullImage");
 const morphCropImage = document.getElementById("morphCropImage");
@@ -115,25 +116,39 @@ const photoRatios = new Map([
   [6, 9 / 16]
 ]);
 
-const boardPaths = {
-  7: "M0 0H960L630 150H530C520 150 530 112 480 112C430 112 440 150 430 150H330Z",
-  8: "M960 0V540L630 390V315C630 305 668 315 668 270C668 225 630 235 630 225V150Z",
-  9: "M960 540H0L330 390H430C440 390 430 352 480 352C530 352 520 390 530 390H630Z",
-  6: "M0 540V0L330 150V225C330 235 292 225 292 270C292 315 330 305 330 315V390Z",
-  10: "M330 150H430C440 150 430 112 480 112C530 112 520 150 530 150H630V225C630 235 668 225 668 270C668 315 630 305 630 315V390H530C520 390 530 352 480 352C430 352 440 390 430 390H330V315C330 305 292 315 292 270C292 225 330 235 330 225Z"
+const boardSeams = {
+  top: "M480 0V50C480 62 448 54 448 86C448 118 480 110 480 122V150",
+  right: "M600 270H740C752 270 740 238 775 238C810 238 798 270 810 270H960",
+  bottom: "M480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540",
+  left: "M360 270H220C208 270 220 302 185 302C150 302 162 270 150 270H0",
+  center: "M480 150C496 150 494 120 525 120C590 120 636 170 650 225C654 242 640 252 625 246C610 240 600 250 600 270C600 290 610 300 625 294C640 288 654 298 650 315C636 370 590 420 525 420C494 420 496 390 480 390C464 390 466 420 435 420C370 420 324 370 310 315C306 298 320 288 335 294C350 300 360 290 360 270C360 250 350 240 335 246C320 252 306 242 310 225C324 170 370 120 435 120C466 120 464 150 480 150Z"
 };
 
+const boardPaths = {
+  7: "M0 0H480V50C480 62 448 54 448 86C448 118 480 110 480 122V150C464 150 466 120 435 120C370 120 324 170 310 225C306 242 320 252 335 246C350 240 360 250 360 270H220C208 270 220 302 185 302C150 302 162 270 150 270H0Z",
+  8: "M480 0V50C480 62 448 54 448 86C448 118 480 110 480 122V150C496 150 494 120 525 120C590 120 636 170 650 225C654 242 640 252 625 246C610 240 600 250 600 270H740C752 270 740 238 775 238C810 238 798 270 810 270H960V0Z",
+  9: "M0 270H150C162 270 150 302 185 302C220 302 208 270 220 270H360C360 290 350 300 335 294C320 288 306 298 310 315C324 370 370 420 435 420C466 420 464 390 480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540H0Z",
+  6: "M960 270H810C798 270 810 238 775 238C740 238 752 270 740 270H600C600 290 610 300 625 294C640 288 654 298 650 315C636 370 590 420 525 420C494 420 496 390 480 390V418C480 430 512 422 512 454C512 486 480 478 480 490V540H960Z",
+  10: boardSeams.center
+};
+
+const finalOuterPath = pathForBox(70, 80, 890, 460, {
+  top: 1,
+  right: -1,
+  bottom: 1,
+  left: -1
+});
+
 const boardAssignments = [
-  { number: 7, path: boardPaths[7], imageBox: { x: 0, y: 0, width: 960, height: 180 } },
-  { number: 8, path: boardPaths[8], imageBox: { x: 600, y: 0, width: 360, height: 540 } },
-  { number: 9, path: boardPaths[9], imageBox: { x: 0, y: 360, width: 960, height: 180 } },
-  { number: 6, path: boardPaths[6], imageBox: { x: 0, y: 0, width: 360, height: 540 } },
-  { number: 10, path: boardPaths[10], imageBox: { x: 292, y: 112, width: 376, height: 278 } }
+  { number: 7, path: boardPaths[7], imageBox: { x: 0, y: 0, width: 520, height: 320 } },
+  { number: 8, path: boardPaths[8], imageBox: { x: 440, y: 0, width: 520, height: 320 } },
+  { number: 9, path: boardPaths[9], imageBox: { x: 0, y: 220, width: 520, height: 320 } },
+  { number: 6, path: boardPaths[6], imageBox: { x: 440, y: 220, width: 520, height: 320 } },
+  { number: 10, path: boardPaths[10], imageBox: { x: 295, y: 105, width: 370, height: 330 } }
 ];
 
 const stepLabels = [
-  "Unfold the puzzle mat",
-  "Show the Mom memory",
+  "Unfold the puzzle mat and place the Mom memory",
   "Show the Dad memory",
   "Show the farm memory",
   "Show the tasting memory",
@@ -149,8 +164,7 @@ const stepLabels = [
 ];
 
 const completionMessages = [
-  "Puzzle mat unfolded",
-  "Mom memory placed",
+  "Puzzle mat unfolded and Mom memory placed",
   "Dad memory placed",
   "Farm memory placed",
   "Tasting memory placed",
@@ -184,6 +198,8 @@ function buildLoosePieces() {
               <path class="piece-clip" d="${shapePaths[number]}"></path>
             </clipPath>
           </defs>
+          <path class="piece-depth piece-depth--back" d="${shapePaths[number]}"></path>
+          <path class="piece-depth piece-depth--cardboard" d="${shapePaths[number]}"></path>
           <image
             href="assets/images/photo${number}.jpg"
             x="0"
@@ -203,12 +219,11 @@ function buildLoosePieces() {
 function seamMarkup(className) {
   return `
     <g class="${className}">
-      <rect x="2" y="2" width="956" height="536"></rect>
-      <path d="M0 0L330 150"></path>
-      <path d="M960 0L630 150"></path>
-      <path d="M960 540L630 390"></path>
-      <path d="M0 540L330 390"></path>
-      <path d="${boardPaths[10]}"></path>
+      <path d="${boardSeams.top}"></path>
+      <path d="${boardSeams.right}"></path>
+      <path d="${boardSeams.bottom}"></path>
+      <path d="${boardSeams.left}"></path>
+      <path d="${boardSeams.center}"></path>
     </g>`;
 }
 
@@ -218,6 +233,8 @@ function buildAssemblyBoard() {
   ).join("");
   const groups = boardAssignments.map(({ number, path, imageBox }) => `
     <g class="assembly-piece" data-assembly-piece="${number}">
+      <path class="assembly-depth assembly-depth--back" d="${path}"></path>
+      <path class="assembly-depth assembly-depth--cardboard" d="${path}"></path>
       <image
         href="assets/images/photo${number}.jpg"
         x="${imageBox.x}"
@@ -258,14 +275,21 @@ function buildFinalBoard() {
     <svg viewBox="0 0 960 540" preserveAspectRatio="none">
       <defs>
         ${clips}
+        <clipPath id="final-outer-clip"><path d="${finalOuterPath}"></path></clipPath>
         <radialGradient id="final-vignette">
           <stop offset="52%" stop-color="#000" stop-opacity="0"></stop>
           <stop offset="100%" stop-color="#000" stop-opacity="0.36"></stop>
         </radialGradient>
       </defs>
-      ${groups}
-      <rect class="final-shade" width="960" height="540"></rect>
-      ${seamMarkup("final-seams")}
+      <path class="final-depth final-depth--back" d="${finalOuterPath}"></path>
+      <path class="final-depth final-depth--cardboard" d="${finalOuterPath}"></path>
+      <path class="final-back-face" d="${finalOuterPath}"></path>
+      <g class="final-face" clip-path="url(#final-outer-clip)">
+        ${groups}
+        <rect class="final-shade" width="960" height="540"></rect>
+        ${seamMarkup("final-seams")}
+      </g>
+      <path class="final-outer-edge" d="${finalOuterPath}"></path>
     </svg>`;
 }
 
@@ -284,6 +308,7 @@ const finalRegions = new Map(
 );
 const finalSeams = finalBoard.querySelector(".final-seams");
 const finalShade = finalBoard.querySelector(".final-shade");
+const finalOuterEdge = finalBoard.querySelector(".final-outer-edge");
 
 let currentStep = 0;
 let busy = false;
@@ -347,15 +372,17 @@ function resetMorphOverlay() {
   clearStyle(memoryMorph, ["opacity"]);
   clearStyle(memoryMorph.querySelector(".memory-morph__veil"), ["opacity"]);
   clearStyle(morphShell, ["left", "top", "opacity", "filter", "transform"]);
+  clearStyle(morphDepth, ["opacity", "filter", "transform"]);
   clearStyle(morphFullImage, ["opacity", "filter"]);
   clearStyle(morphCropImage, ["opacity", "filter"]);
   morphFullImage.removeAttribute("href");
   morphCropImage.removeAttribute("href");
-  [morphPath, morphEdge].forEach((path) => {
+  [morphPath, morphDepth, morphEdge].forEach((path) => {
     path._morphVersion = (path._morphVersion || 0) + 1;
     path.querySelectorAll("animate").forEach((animation) => animation.remove());
   });
   morphPath.removeAttribute("d");
+  morphDepth.removeAttribute("d");
   morphEdge.removeAttribute("d");
 }
 
@@ -377,7 +404,11 @@ function resetPuzzle({ announce = true } = {}) {
     clearPieceState(piece);
     piece.hidden = true;
     const basePath = shapePaths[number];
-    [piece.querySelector(".piece-clip"), piece.querySelector(".piece-edge")].forEach((path) => {
+    [
+      piece.querySelector(".piece-clip"),
+      piece.querySelector(".piece-edge"),
+      ...piece.querySelectorAll(".piece-depth")
+    ].forEach((path) => {
       path._morphVersion = (path._morphVersion || 0) + 1;
       path.querySelectorAll("animate").forEach((animation) => animation.remove());
       path.setAttribute("d", basePath);
@@ -388,6 +419,7 @@ function resetPuzzle({ announce = true } = {}) {
 
   cancelAnimations(assemblyBoard, true);
   assemblyBoard.hidden = true;
+  clearStyle(assemblyBoard, ["opacity", "filter", "transform"]);
   assemblyPieces.forEach((piece) => {
     clearStyle(piece, ["opacity", "filter", "transform"]);
     piece.style.opacity = "0";
@@ -395,9 +427,11 @@ function resetPuzzle({ announce = true } = {}) {
 
   cancelAnimations(finalBoard, true);
   finalBoard.hidden = true;
+  clearStyle(finalBoard, ["opacity", "filter", "transform", "transform-origin"]);
   finalRegions.forEach((region) => clearStyle(region, ["opacity", "filter", "transform"]));
   clearStyle(finalSeams, ["opacity", "filter"]);
   clearStyle(finalShade, ["opacity"]);
+  clearStyle(finalOuterEdge, ["opacity", "filter"]);
 
   cancelAnimations(snapFlash);
   clearStyle(snapFlash, ["left", "top", "width", "opacity", "transform"]);
@@ -474,8 +508,8 @@ function snapAt(left, top, width = "18%", duration = motionDuration(430, 70)) {
 }
 
 async function unfoldMat(token) {
-  const duration = motionDuration(1320, 120);
-  const strapDuration = motionDuration(430, 60);
+  const duration = motionDuration(2320, 120);
+  const strapDuration = motionDuration(820, 60);
 
   const strap = matStrap.animate(
     [
@@ -548,14 +582,16 @@ async function revealMemory(number, token) {
   const aspectBox = aspectRectangle(photoRatios.get(number));
   const startPath = pathForBox(aspectBox.x1, aspectBox.y1, aspectBox.x2, aspectBox.y2);
   const targetPath = shapePaths[number];
-  const introDuration = motionDuration(720, 70);
-  const morphDuration = motionDuration(1040, 110);
+  const introDuration = motionDuration(1020, 70);
+  const morphDuration = motionDuration(1640, 110);
   const source = `assets/images/photo${number}.jpg`;
 
   setSvgHref(morphFullImage, source);
   setSvgHref(morphCropImage, source);
   morphPath.setAttribute("d", startPath);
+  morphDepth.setAttribute("d", startPath);
   morphEdge.setAttribute("d", startPath);
+  morphDepth.style.opacity = "0";
   morphFullImage.style.opacity = "0";
   morphCropImage.style.opacity = "0";
   morphShell.style.left = "50%";
@@ -587,7 +623,7 @@ async function revealMemory(number, token) {
 
   await waitForAnimations(introAnimations);
   if (token !== runId) return false;
-  await pause(motionDuration(240, 0));
+  await pause(motionDuration(340, 0));
   if (token !== runId) return false;
 
   const shellAnimation = morphShell.animate(
@@ -638,13 +674,23 @@ async function revealMemory(number, token) {
     { duration: morphDuration, easing: "ease-in", fill: "both" }
   );
 
+  const depthReveal = morphDepth.animate(
+    [
+      { opacity: 0, transform: "translate(0, 0)" },
+      { opacity: 0, transform: "translate(0, 0)", offset: 0.32 },
+      { opacity: 1, transform: "translate(0, 10px)" }
+    ],
+    { duration: morphDuration, easing: "ease-out", fill: "both" }
+  );
+
   const pathMorphs = [
     morphSvgPath(morphPath, startPath, targetPath, morphDuration),
+    morphSvgPath(morphDepth, startPath, targetPath, morphDuration),
     morphSvgPath(morphEdge, startPath, targetPath, morphDuration)
   ];
 
   await Promise.all([
-    waitForAnimations([shellAnimation, fullFade, cropReveal, veilFade]),
+    waitForAnimations([shellAnimation, fullFade, cropReveal, veilFade, depthReveal]),
     ...pathMorphs
   ]);
   if (token !== runId) return false;
@@ -727,8 +773,8 @@ async function mergeFirstPair(token) {
   const first = pieces.get(1);
   const second = pieces.get(2);
   const result = pieces.get(7);
-  const moveDuration = motionDuration(980, 100);
-  const changeDuration = motionDuration(620, 90);
+  const moveDuration = motionDuration(1380, 100);
+  const changeDuration = motionDuration(1020, 90);
   const leftLayout = { left: "18%", top: "50%", width: "18.67%", height: "33.19%" };
   const rightLayout = { left: "32%", top: "50%", width: "18.67%", height: "33.19%" };
 
@@ -743,9 +789,9 @@ async function mergeFirstPair(token) {
   commitPieceLayout(first, leftLayout);
   commitPieceLayout(second, rightLayout);
 
-  await animationFinished(snapAt("25%", "50%", "12%"));
+  await animationFinished(snapAt("25%", "50%", "12%", motionDuration(530, 70)));
   if (token !== runId) return false;
-  await pause(motionDuration(140, 0));
+  await pause(motionDuration(240, 0));
 
   result.hidden = false;
   result.style.left = "25%";
@@ -789,7 +835,7 @@ async function mergeFirstPair(token) {
 async function growMemory(sourceNumber, resultNumber, token) {
   const source = pieces.get(sourceNumber);
   const result = pieces.get(resultNumber);
-  const duration = motionDuration(1060, 110);
+  const duration = motionDuration(1760, 110);
   const layout = {
     left: cssValue(result, "--x"),
     top: cssValue(result, "--y"),
@@ -818,7 +864,7 @@ async function growMemory(sourceNumber, resultNumber, token) {
       { opacity: 1, filter: "brightness(1.06) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1.025)`, offset: 0.84 },
       { opacity: 1, filter: "brightness(1) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1)` }
     ],
-    { duration, delay: motionDuration(260, 0), easing: "cubic-bezier(.18,.74,.22,1)", fill: "forwards" }
+    { duration, delay: motionDuration(560, 0), easing: "cubic-bezier(.18,.74,.22,1)", fill: "forwards" }
   );
   const flash = snapAt(layout.left, layout.top, "24%", duration);
 
@@ -838,9 +884,10 @@ async function transformSix(token) {
   const piece = pieces.get(6);
   const clip = piece.querySelector(".piece-clip");
   const edge = piece.querySelector(".piece-edge");
+  const depthPaths = [...piece.querySelectorAll(".piece-depth")];
   const fromPath = shapePaths[6];
   const toPath = shapePaths["6-transformed"];
-  const duration = motionDuration(980, 100);
+  const duration = motionDuration(1980, 100);
   const layout = { left: "61%", top: "70%", width: "23%", height: "40.89%" };
 
   const movement = animatePieceTo(piece, layout, duration, 0, {
@@ -852,6 +899,7 @@ async function transformSix(token) {
   await Promise.all([
     waitForAnimations([movement, glow]),
     morphSvgPath(clip, fromPath, toPath, duration),
+    ...depthPaths.map((path) => morphSvgPath(path, fromPath, toPath, duration)),
     morphSvgPath(edge, fromPath, toPath, duration)
   ]);
   if (token !== runId) return false;
@@ -859,6 +907,7 @@ async function transformSix(token) {
   cancelAnimations(piece);
   commitPieceLayout(piece, layout, "-1deg");
   clip.setAttribute("d", toPath);
+  depthPaths.forEach((path) => path.setAttribute("d", toPath));
   edge.setAttribute("d", toPath);
   return true;
 }
@@ -895,13 +944,13 @@ function fadeLoosePiece(piece, destination, duration, delay = 0) {
 }
 
 async function assembleOuterPieces(token) {
-  const duration = motionDuration(1180, 120);
+  const duration = motionDuration(2180, 120);
   const stagger = reduceMotion.matches ? 0 : 65;
   const sequence = [
-    { number: 7, start: "translate(0,-22%) scale(.82) rotate(-2deg)", destination: { left: "50%", top: "25%" } },
-    { number: 8, start: "translate(23%,0) scale(.82) rotate(2deg)", destination: { left: "75%", top: "50%" } },
-    { number: 9, start: "translate(0,22%) scale(.82) rotate(2deg)", destination: { left: "50%", top: "75%" } },
-    { number: 6, start: "translate(-23%,0) scale(.82) rotate(-2deg)", destination: { left: "25%", top: "50%" } }
+    { number: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "25%", top: "25%" } },
+    { number: 8, start: "translate(18%,-18%) scale(.82) rotate(2deg)", destination: { left: "75%", top: "25%" } },
+    { number: 9, start: "translate(-18%,18%) scale(.82) rotate(2deg)", destination: { left: "25%", top: "75%" } },
+    { number: 6, start: "translate(18%,18%) scale(.82) rotate(-2deg)", destination: { left: "75%", top: "75%" } }
   ];
 
   assemblyBoard.hidden = false;
@@ -945,9 +994,9 @@ async function assembleOuterPieces(token) {
 async function completeCenterPiece(token) {
   const source = pieces.get(4);
   const center = assemblyPieces.get(10);
-  const moveDuration = motionDuration(840, 90);
-  const revealDuration = motionDuration(560, 80);
-  const centerLayout = { left: "50%", top: "50%", width: "20%", height: "35.56%" };
+  const moveDuration = motionDuration(1340, 90);
+  const revealDuration = motionDuration(1060, 80);
+  const centerLayout = { left: "50%", top: "50%", width: "25.5%", height: "45.33%" };
 
   const move = animatePieceTo(source, centerLayout, moveDuration, 0, {
     rotation: "0deg",
@@ -988,90 +1037,151 @@ async function completeCenterPiece(token) {
 }
 
 async function revealFinalPhotograph(token) {
-  const centerDuration = motionDuration(620, 80);
-  const outerDuration = motionDuration(760, 90);
-  const outerStagger = reduceMotion.matches ? 0 : 70;
-  const center = finalRegions.get(10);
-  const outerOrder = [7, 8, 9, 6];
+  const boardSwapDuration = motionDuration(1800, 90);
+  const regionDuration = motionDuration(4200, 120);
+  const regionStagger = reduceMotion.matches ? 0 : 2250;
+  const finishDuration = motionDuration(3000, 120);
+  const finishDelay = reduceMotion.matches ? 0 : 12000;
+  const revealOrder = [7, 8, 10, 9, 6];
 
   finalBoard.hidden = false;
+  finalBoard.style.opacity = "0";
+  finalBoard.style.transform = "perspective(1400px) rotateY(-88deg) scale(.96)";
+  finalBoard.style.transformOrigin = "50% 50%";
   finalRegions.forEach((region) => {
     region.style.opacity = "0";
-    region.style.transform = "scale(.94)";
-    region.style.filter = "sepia(.5) brightness(1.18) blur(4px)";
+    region.style.transform = "rotateY(92deg) scale(.94)";
+    region.style.filter = "sepia(.7) brightness(.48) blur(4px)";
   });
   finalSeams.style.opacity = "0";
   finalShade.style.opacity = "0";
+  finalOuterEdge.style.opacity = "0";
 
-  const centerReveal = center.animate(
+  const assemblyExit = assemblyBoard.animate(
     [
-      { opacity: 0, filter: "sepia(.65) brightness(1.3) blur(5px)", transform: "scale(.82)" },
-      { opacity: 1, filter: "sepia(.08) brightness(1.07) blur(0px)", transform: "scale(1.03)", offset: 0.8 },
-      { opacity: 1, filter: "sepia(0) brightness(1) blur(0px)", transform: "scale(1)" }
+      { opacity: 1, filter: "brightness(1)", transform: "perspective(1400px) rotateY(0deg) scale(1)" },
+      { opacity: 0, filter: "brightness(.62)", transform: "perspective(1400px) rotateY(88deg) scale(.96)" }
     ],
-    { duration: centerDuration, easing: "cubic-bezier(.18,.76,.2,1)", fill: "forwards" }
+    { duration: boardSwapDuration, easing: "cubic-bezier(.55,.05,.72,.28)", fill: "forwards" }
   );
-  await animationFinished(centerReveal);
-  if (token !== runId) return false;
 
-  const outerAnimations = outerOrder.map((number, index) => finalRegions.get(number).animate(
+  const boardEntrance = finalBoard.animate(
     [
-      { opacity: 0, filter: "sepia(.52) brightness(1.24) blur(4px)", transform: "scale(.92)" },
-      { opacity: 1, filter: "sepia(.06) brightness(1.06) blur(0px)", transform: "scale(1.018)", offset: 0.82 },
-      { opacity: 1, filter: "sepia(0) brightness(1) blur(0px)", transform: "scale(1)" }
+      { opacity: 0, filter: "brightness(.55)", transform: "perspective(1400px) rotateY(-88deg) scale(.96)" },
+      { opacity: 1, filter: "brightness(1)", transform: "perspective(1400px) rotateY(0deg) scale(1)" }
     ],
-    {
-      duration: outerDuration,
-      delay: index * outerStagger,
-      easing: "cubic-bezier(.18,.74,.22,1)",
-      fill: "forwards"
-    }
-  ));
+    { duration: boardSwapDuration, easing: "cubic-bezier(.18,.72,.22,1)", fill: "forwards" }
+  );
+
+  const edgeReveal = finalOuterEdge.animate(
+    [{ opacity: 0 }, { opacity: 0.25, offset: 0.42 }, { opacity: 1 }],
+    { duration: boardSwapDuration, easing: "ease-out", fill: "forwards" }
+  );
+
+  const regionAnimations = revealOrder.map((number, index) => {
+    const direction = index % 2 === 0 ? 1 : -1;
+    return finalRegions.get(number).animate(
+      [
+        {
+          opacity: 0,
+          filter: "sepia(.72) brightness(.42) blur(4px)",
+          transform: `rotateY(${direction * 92}deg) scale(.94)`
+        },
+        {
+          opacity: 0.18,
+          filter: "sepia(.58) brightness(.7) blur(3px)",
+          transform: `rotateY(${direction * 76}deg) scale(.96)`,
+          offset: 0.38
+        },
+        {
+          opacity: 1,
+          filter: "sepia(.06) brightness(1.07) blur(0px)",
+          transform: `rotateY(${direction * -5}deg) scale(1.018)`,
+          offset: 0.84
+        },
+        {
+          opacity: 1,
+          filter: "sepia(0) brightness(1) blur(0px)",
+          transform: "rotateY(0deg) scale(1)"
+        }
+      ],
+      {
+        duration: regionDuration,
+        delay: boardSwapDuration + index * regionStagger,
+        easing: "cubic-bezier(.18,.74,.22,1)",
+        fill: "forwards"
+      }
+    );
+  });
+
   const seamsReveal = finalSeams.animate(
-    [{ opacity: 0 }, { opacity: 0, offset: 0.44 }, { opacity: 1 }],
+    [{ opacity: 0 }, { opacity: 0, offset: 0.28 }, { opacity: 1 }],
     {
-      duration: outerDuration + outerStagger * (outerOrder.length - 1),
+      duration: finishDuration,
+      delay: finishDelay,
       easing: "ease-out",
       fill: "forwards"
     }
   );
   const shadeReveal = finalShade.animate(
-    [{ opacity: 0 }, { opacity: 0, offset: 0.36 }, { opacity: 0.42 }],
+    [{ opacity: 0 }, { opacity: 0.08, offset: 0.32 }, { opacity: 0.38 }],
     {
-      duration: outerDuration + outerStagger * (outerOrder.length - 1),
+      duration: finishDuration,
+      delay: finishDelay,
       easing: "ease-out",
       fill: "forwards"
     }
   );
 
-  await waitForAnimations([...outerAnimations, seamsReveal, shadeReveal]);
+  await waitForAnimations([
+    assemblyExit,
+    boardEntrance,
+    edgeReveal,
+    ...regionAnimations,
+    seamsReveal,
+    shadeReveal
+  ]);
   if (token !== runId) return false;
 
+  cancelAnimations(assemblyBoard);
+  assemblyBoard.hidden = true;
+  clearStyle(assemblyBoard, ["opacity", "filter", "transform"]);
+  cancelAnimations(finalBoard);
+  finalBoard.style.opacity = "1";
+  finalBoard.style.filter = "brightness(1)";
+  finalBoard.style.transform = "none";
   finalRegions.forEach((region) => {
     cancelAnimations(region);
     region.style.opacity = "1";
     region.style.filter = "sepia(0) brightness(1) blur(0px)";
-    region.style.transform = "scale(1)";
+    region.style.transform = "rotateY(0deg) scale(1)";
   });
   cancelAnimations(finalSeams);
   finalSeams.style.opacity = "1";
   cancelAnimations(finalShade);
-  finalShade.style.opacity = "0.42";
-  assemblyBoard.hidden = true;
+  finalShade.style.opacity = "0.38";
+  cancelAnimations(finalOuterEdge);
+  finalOuterEdge.style.opacity = "1";
   stage.classList.add("is-final");
   return true;
 }
 
+async function unfoldAndPlaceFirstMemory(token) {
+  const unfolded = await unfoldMat(token);
+  if (!unfolded || token !== runId) return false;
+  return revealMemory(1, token);
+}
+
 async function runCurrentStep(token) {
-  if (currentStep === 0) return unfoldMat(token);
-  if (currentStep >= 1 && currentStep <= 6) return revealMemory(currentStep, token);
-  if (currentStep === 7) return mergeFirstPair(token);
-  if (currentStep === 8) return growMemory(3, 8, token);
-  if (currentStep === 9) return growMemory(5, 9, token);
-  if (currentStep === 10) return transformSix(token);
-  if (currentStep === 11) return assembleOuterPieces(token);
-  if (currentStep === 12) return completeCenterPiece(token);
-  if (currentStep === 13) return revealFinalPhotograph(token);
+  if (currentStep === 0) return unfoldAndPlaceFirstMemory(token);
+  if (currentStep >= 1 && currentStep <= 5) return revealMemory(currentStep + 1, token);
+  if (currentStep === 6) return mergeFirstPair(token);
+  if (currentStep === 7) return growMemory(3, 8, token);
+  if (currentStep === 8) return growMemory(5, 9, token);
+  if (currentStep === 9) return transformSix(token);
+  if (currentStep === 10) return assembleOuterPieces(token);
+  if (currentStep === 11) return completeCenterPiece(token);
+  if (currentStep === 12) return revealFinalPhotograph(token);
   return false;
 }
 

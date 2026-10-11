@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#100d0b">
     <title>Memory Puzzle</title>
-    <link rel="stylesheet" href="styles.css?v=20261003-1">
-    <script src="script.js?v=20261003-1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261011-1">
+    <script src="script.js?v=20261011-1" defer></script>
   </head>
 
   <body>
@@ -23,7 +23,7 @@
           class="advance-control"
           id="advanceControl"
           type="button"
-          aria-label="Unfold the puzzle mat"
+          aria-label="Unfold the puzzle mat and place the Mom memory"
           aria-describedby="puzzleStatus"
           disabled
         ></button>
@@ -60,6 +60,7 @@
               <defs>
                 <clipPath id="morph-clip"><path id="morphPath"></path></clipPath>
               </defs>
+              <path class="morph-depth" id="morphDepth"></path>
               <image
                 id="morphFullImage"
                 x="0"
