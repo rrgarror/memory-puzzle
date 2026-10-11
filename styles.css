@@ -4,14 +4,14 @@
   color: #f4ecdf;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
-  --piece-edge: rgba(255, 244, 225, 0.92);
-  --piece-edge-soft: rgba(248, 226, 199, 0.7);
-  --cardboard-light: #d0a477;
-  --cardboard-mid: #946540;
-  --cardboard-dark: #3d2719;
-  --mat-dark: #050505;
-  --mat-mid: #101010;
-  --mat-light: #242424;
+  --piece-edge: rgba(235, 245, 247, 0.94);
+  --piece-edge-soft: rgba(195, 213, 218, 0.72);
+  --cardboard-light: #9aabb0;
+  --cardboard-mid: #607177;
+  --cardboard-dark: #263237;
+  --mat-dark: #4b4b4b;
+  --mat-mid: rgb(105, 105, 105);
+  --mat-light: #858585;
 }
 
 *,
@@ -318,7 +318,7 @@ button {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1.8%;
-  background: #080808;
+  background: rgb(105, 105, 105);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.018),
     inset 0 1.8vw 3vw rgba(255, 255, 255, 0.018),
@@ -429,7 +429,7 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 46% / 2.2%;
   background:
-    linear-gradient(90deg, #020202 0%, #0b0b0b 17%, #2a2a2a 46%, #111 69%, #030303 100%),
+    linear-gradient(90deg, #3d3d3d 0%, #555 17%, #898989 46%, #626262 69%, #414141 100%),
     repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, 0.025) 3px 4px);
   box-shadow:
     inset 0.4vw 0 0.75vw rgba(0, 0, 0, 0.85),
@@ -444,7 +444,7 @@ button {
   aspect-ratio: 1 / 0.34;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 50%;
-  background: radial-gradient(ellipse, #242424 0 17%, #0d0d0d 39%, #020202 74%);
+  background: radial-gradient(ellipse, #949494 0 17%, #686868 39%, #3d3d3d 74%);
   box-shadow: 0 0.15vw 0.4vw rgba(0, 0, 0, 0.66);
   transform: translateX(-50%);
 }
@@ -540,25 +540,25 @@ button {
 .assembly-depth--back,
 .final-piece-depth--back {
   fill: var(--cardboard-dark);
-  stroke: rgba(20, 12, 7, 0.96);
+  stroke: rgba(18, 29, 34, 0.96);
   stroke-width: 3.2;
-  transform: translate(1px, 18px);
+  transform: translate(1px, 19px);
 }
 
 .piece-depth--cardboard,
 .assembly-depth--cardboard,
 .final-piece-depth--cardboard {
   fill: var(--cardboard-mid);
-  stroke: rgba(224, 174, 126, 0.58);
+  stroke: rgba(184, 205, 210, 0.6);
   stroke-width: 2.6;
-  transform: translate(0.7px, 11px);
+  transform: translate(0.7px, 12px);
 }
 
 .piece-depth--bevel,
 .assembly-depth--bevel,
 .final-piece-depth--bevel {
-  fill: #b9855b;
-  stroke: rgba(255, 225, 190, 0.42);
+  fill: #819298;
+  stroke: rgba(228, 242, 245, 0.5);
   stroke-width: 2.1;
   transform: translate(0.25px, 4px);
 }
@@ -586,6 +586,14 @@ button {
 .piece-sheen,
 .assembly-sheen,
 .final-piece-sheen {
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+.piece-texture,
+.assembly-texture,
+.final-piece-texture {
+  opacity: 0.38;
   pointer-events: none;
   mix-blend-mode: soft-light;
 }
@@ -635,7 +643,7 @@ button {
 
 .morph-depth {
   fill: var(--cardboard-mid);
-  stroke: rgba(52, 31, 20, 0.92);
+  stroke: rgba(25, 39, 44, 0.94);
   stroke-width: 4;
   opacity: 0;
   transform: translate(0, 10px);
@@ -644,7 +652,7 @@ button {
 
 .morph-edge {
   fill: none;
-  stroke: rgba(255, 246, 232, 0.9);
+  stroke: rgba(235, 245, 247, 0.94);
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -733,7 +741,7 @@ button {
 }
 
 .final-seams {
-  stroke: rgba(255, 245, 229, 0.9);
+  stroke: rgba(235, 245, 247, 0.92);
   stroke-width: 2.5;
   opacity: 0;
 }
@@ -756,7 +764,7 @@ button {
 
 .final-outer-edge {
   fill: none;
-  stroke: rgba(255, 244, 225, 0.94);
+  stroke: rgba(235, 245, 247, 0.96);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2.8;

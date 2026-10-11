@@ -90,29 +90,29 @@ const photoRatios = new Map([
 ]);
 
 const boardSeams = {
-  top: "M480 55V74C480 86 450 78 450 105C450 132 480 124 480 136V145",
-  right: "M598 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910",
-  bottom: "M480 395V404C480 416 510 408 510 435C510 462 480 454 480 466V485",
-  left: "M362 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50",
-  center: "M480 145C466 145 468 116 436 116C370 116 322 164 308 220C303 239 317 253 336 245C352 239 362 248 362 270C362 292 352 301 336 295C317 287 303 301 308 320C322 376 370 424 436 424C468 424 466 395 480 395C494 395 492 424 524 424C590 424 638 376 652 320C657 301 643 287 624 295C608 301 598 292 598 270C598 248 608 239 624 245C643 253 657 239 652 220C638 164 590 116 524 116C492 116 494 145 480 145Z"
+  top: "M480 55V92C480 104 450 96 450 125C450 154 480 146 480 158V205",
+  right: "M655 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910",
+  bottom: "M480 335V382C480 394 510 386 510 415C510 444 480 436 480 448V485",
+  left: "M305 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50",
+  center: "M480 205C455 205 438 190 438 170C438 158 426 150 414 150H370C352 150 340 162 340 180V225C340 238 305 228 305 270C305 312 340 302 340 315V360C340 378 352 390 370 390H414C426 390 438 382 438 370C438 350 455 335 480 335C505 335 522 350 522 370C522 382 534 390 546 390H590C608 390 620 378 620 360V315C620 302 655 312 655 270C655 228 620 238 620 225V180C620 162 608 150 590 150H546C534 150 522 158 522 170C522 190 505 205 480 205Z"
 };
 
 const boardPaths = {
-  7: "M50 55H185C197 55 187 15 225 15C263 15 253 55 265 55H480V74C480 86 450 78 450 105C450 132 480 124 480 136V145C466 145 468 116 436 116C370 116 322 164 308 220C303 239 317 253 336 245C352 239 362 248 362 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50V205C50 193 10 203 10 165C10 127 50 137 50 125V55Z",
-  8: "M480 55H690C702 55 692 95 730 95C768 95 758 55 770 55H910V125C910 137 950 127 950 165C950 203 910 193 910 205V270H820C808 270 818 238 783 238C748 238 758 270 746 270H598C598 248 608 239 624 245C643 253 657 239 652 220C638 164 590 116 524 116C492 116 494 145 480 145V136C480 124 450 132 450 105C450 78 480 86 480 74V55Z",
-  9: "M50 270H140C152 270 142 238 177 238C212 238 202 270 214 270H362C362 292 352 301 336 295C317 287 303 301 308 320C322 376 370 424 436 424C468 424 466 395 480 395V404C480 416 510 408 510 435C510 462 480 454 480 466V485H265C253 485 263 525 225 525C187 525 197 485 185 485H50V415C50 403 10 413 10 375C10 337 50 347 50 335V270Z",
-  6: "M598 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910V335C910 347 950 337 950 375C950 413 910 403 910 415V485H770C758 485 768 525 730 525C692 525 702 485 690 485H480V466C480 454 510 462 510 435C510 408 480 416 480 404V395C494 395 492 424 524 424C590 424 638 376 652 320C657 301 643 287 624 295C608 301 598 292 598 270Z",
+  7: "M50 55H185C197 55 187 15 225 15C263 15 253 55 265 55H480V92C480 104 450 96 450 125C450 154 480 146 480 158V205C455 205 438 190 438 170C438 158 426 150 414 150H370C352 150 340 162 340 180V225C340 238 305 228 305 270H214C202 270 212 238 177 238C142 238 152 270 140 270H50V205C50 193 10 203 10 165C10 127 50 137 50 125V55Z",
+  8: "M480 55H690C702 55 692 95 730 95C768 95 758 55 770 55H910V125C910 137 950 127 950 165C950 203 910 193 910 205V270H820C808 270 818 238 783 238C748 238 758 270 746 270H655C655 228 620 238 620 225V180C620 162 608 150 590 150H546C534 150 522 158 522 170C522 190 505 205 480 205V158C480 146 450 154 450 125C450 96 480 104 480 92V55Z",
+  9: "M50 270H140C152 270 142 238 177 238C212 238 202 270 214 270H305C305 312 340 302 340 315V360C340 378 352 390 370 390H414C426 390 438 382 438 370C438 350 455 335 480 335V382C480 394 510 386 510 415C510 444 480 436 480 448V485H265C253 485 263 525 225 525C187 525 197 485 185 485H50V415C50 403 10 413 10 375C10 337 50 347 50 335V270Z",
+  6: "M655 270H746C758 270 748 238 783 238C818 238 808 270 820 270H910V335C910 347 950 337 950 375C950 413 910 403 910 415V485H770C758 485 768 525 730 525C692 525 702 485 690 485H480V448C480 436 510 444 510 415C510 386 480 394 480 382V335C505 335 522 350 522 370C522 382 534 390 546 390H590C608 390 620 378 620 360V315C620 302 655 312 655 270Z",
   10: boardSeams.center
 };
 
 const finalOuterPath = "M50 55H185C197 55 187 15 225 15C263 15 253 55 265 55H480H690C702 55 692 95 730 95C768 95 758 55 770 55H910V125C910 137 950 127 950 165C950 203 910 193 910 205V335C910 347 950 337 950 375C950 413 910 403 910 415V485H770C758 485 768 525 730 525C692 525 702 485 690 485H480H265C253 485 263 525 225 525C187 525 197 485 185 485H50V415C50 403 10 413 10 375C10 337 50 347 50 335V205C50 193 10 203 10 165C10 127 50 137 50 125V55Z";
 
 const boardAssignments = [
+  { number: 10, path: boardPaths[10], viewBox: "285 130 390 280", imageBox: { x: 290, y: 135, width: 380, height: 270 } },
   { number: 7, path: boardPaths[7], viewBox: "0 0 520 320", imageBox: { x: 0, y: 0, width: 520, height: 320 } },
   { number: 8, path: boardPaths[8], viewBox: "440 0 520 320", imageBox: { x: 440, y: 0, width: 520, height: 320 } },
   { number: 9, path: boardPaths[9], viewBox: "0 220 520 320", imageBox: { x: 0, y: 220, width: 520, height: 320 } },
-  { number: 6, path: boardPaths[6], viewBox: "440 220 520 320", imageBox: { x: 440, y: 220, width: 520, height: 320 } },
-  { number: 10, path: boardPaths[10], viewBox: "290 105 380 330", imageBox: { x: 290, y: 105, width: 380, height: 330 } }
+  { number: 6, path: boardPaths[6], viewBox: "440 220 520 320", imageBox: { x: 440, y: 220, width: 520, height: 320 } }
 ];
 
 const shapePaths = {
@@ -190,9 +190,9 @@ function buildLoosePieces() {
               <path class="piece-clip" d="${path}"></path>
             </clipPath>
             <linearGradient id="piece-${number}-cardboard" x1="0" y1="0" x2="0.82" y2="1">
-              <stop offset="0" stop-color="#d2aa80"></stop>
-              <stop offset="0.46" stop-color="#986942"></stop>
-              <stop offset="1" stop-color="#53351f"></stop>
+              <stop offset="0" stop-color="#9eafb4"></stop>
+              <stop offset="0.46" stop-color="#607177"></stop>
+              <stop offset="1" stop-color="#29373c"></stop>
             </linearGradient>
             <linearGradient id="piece-${number}-sheen" x1="0" y1="0" x2="0.76" y2="1">
               <stop offset="0" stop-color="#fff" stop-opacity="0.22"></stop>
@@ -200,6 +200,10 @@ function buildLoosePieces() {
               <stop offset="0.72" stop-color="#000" stop-opacity="0.04"></stop>
               <stop offset="1" stop-color="#000" stop-opacity="0.2"></stop>
             </linearGradient>
+            <pattern id="piece-${number}-texture" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-7)">
+              <path d="M0 1H7" stroke="#fff" stroke-opacity="0.18" stroke-width="0.65"></path>
+              <path d="M0 4H7" stroke="#102126" stroke-opacity="0.15" stroke-width="0.55"></path>
+            </pattern>
           </defs>
           <path class="piece-depth piece-depth--back" d="${path}"></path>
           <path class="piece-depth piece-depth--cardboard" d="${path}" style="fill:url(#piece-${number}-cardboard)"></path>
@@ -213,6 +217,7 @@ function buildLoosePieces() {
             preserveAspectRatio="xMidYMid slice"
             clip-path="url(#piece-${number}-clip)"
           ></image>
+          <path class="piece-texture" d="${path}" fill="url(#piece-${number}-texture)" clip-path="url(#piece-${number}-clip)"></path>
           <path class="piece-sheen" d="${path}" fill="url(#piece-${number}-sheen)" clip-path="url(#piece-${number}-clip)"></path>
           <path class="piece-edge" d="${path}"></path>
         </svg>
@@ -249,6 +254,7 @@ function buildAssemblyBoard() {
         preserveAspectRatio="xMidYMid slice"
         clip-path="url(#assembly-clip-${number})"
       ></image>
+      <path class="assembly-texture" d="${path}" fill="url(#assembly-texture)" clip-path="url(#assembly-clip-${number})"></path>
       <path class="assembly-sheen" d="${path}" fill="url(#assembly-sheen)" clip-path="url(#assembly-clip-${number})"></path>
       <path class="assembly-edge" d="${path}"></path>
     </g>`).join("");
@@ -258,9 +264,9 @@ function buildAssemblyBoard() {
       <defs>
         ${clips}
         <linearGradient id="assembly-cardboard" x1="0" y1="0" x2="0.82" y2="1">
-          <stop offset="0" stop-color="#d2aa80"></stop>
-          <stop offset="0.46" stop-color="#986942"></stop>
-          <stop offset="1" stop-color="#53351f"></stop>
+          <stop offset="0" stop-color="#9eafb4"></stop>
+          <stop offset="0.46" stop-color="#607177"></stop>
+          <stop offset="1" stop-color="#29373c"></stop>
         </linearGradient>
         <linearGradient id="assembly-sheen" x1="0" y1="0" x2="0.8" y2="1">
           <stop offset="0" stop-color="#fff" stop-opacity="0.2"></stop>
@@ -268,6 +274,10 @@ function buildAssemblyBoard() {
           <stop offset="0.72" stop-color="#000" stop-opacity="0.035"></stop>
           <stop offset="1" stop-color="#000" stop-opacity="0.2"></stop>
         </linearGradient>
+        <pattern id="assembly-texture" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-7)">
+          <path d="M0 1H8" stroke="#fff" stroke-opacity="0.18" stroke-width="0.7"></path>
+          <path d="M0 4.5H8" stroke="#102126" stroke-opacity="0.15" stroke-width="0.6"></path>
+        </pattern>
       </defs>
       ${groups}
     </svg>`;
@@ -292,6 +302,7 @@ function buildFinalBoard() {
         preserveAspectRatio="xMidYMid slice"
         clip-path="url(#final-clip-${number})"
       ></image>
+      <path class="final-piece-texture" d="${path}" fill="url(#final-texture)" clip-path="url(#final-clip-${number})"></path>
       <path class="final-piece-sheen" d="${path}" fill="url(#final-piece-sheen)" clip-path="url(#final-clip-${number})"></path>
       <path class="final-piece-edge" d="${path}"></path>
     </g>`).join("");
@@ -306,9 +317,9 @@ function buildFinalBoard() {
           <stop offset="100%" stop-color="#000" stop-opacity="0.36"></stop>
         </radialGradient>
         <linearGradient id="final-cardboard" x1="0" y1="0" x2="0.82" y2="1">
-          <stop offset="0" stop-color="#d2aa80"></stop>
-          <stop offset="0.46" stop-color="#986942"></stop>
-          <stop offset="1" stop-color="#53351f"></stop>
+          <stop offset="0" stop-color="#9eafb4"></stop>
+          <stop offset="0.46" stop-color="#607177"></stop>
+          <stop offset="1" stop-color="#29373c"></stop>
         </linearGradient>
         <linearGradient id="final-piece-sheen" x1="0" y1="0" x2="0.8" y2="1">
           <stop offset="0" stop-color="#fff" stop-opacity="0.18"></stop>
@@ -316,6 +327,10 @@ function buildFinalBoard() {
           <stop offset="0.75" stop-color="#000" stop-opacity="0.04"></stop>
           <stop offset="1" stop-color="#000" stop-opacity="0.18"></stop>
         </linearGradient>
+        <pattern id="final-texture" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-7)">
+          <path d="M0 1H8" stroke="#fff" stroke-opacity="0.18" stroke-width="0.7"></path>
+          <path d="M0 4.5H8" stroke="#102126" stroke-opacity="0.15" stroke-width="0.6"></path>
+        </pattern>
       </defs>
       ${groups}
       <path class="final-shade" d="${finalOuterPath}" fill="url(#final-vignette)"></path>
@@ -438,6 +453,7 @@ function resetPuzzle({ announce = true } = {}) {
     [
       piece.querySelector(".piece-clip"),
       piece.querySelector(".piece-edge"),
+      piece.querySelector(".piece-texture"),
       piece.querySelector(".piece-sheen"),
       ...piece.querySelectorAll(".piece-depth")
     ].filter(Boolean).forEach((path) => {
@@ -795,8 +811,8 @@ async function mergeFirstPair(token) {
   const first = pieces.get(1);
   const second = pieces.get(2);
   const result = pieces.get(7);
-  const moveDuration = motionDuration(1380, 100);
-  const changeDuration = motionDuration(1020, 90);
+  const moveDuration = motionDuration(2380, 100);
+  const changeDuration = motionDuration(2020, 90);
   const leftLayout = { left: "18%", top: "50%", width: "18.67%", height: "33.19%" };
   const rightLayout = { left: "32%", top: "50%", width: "18.67%", height: "33.19%" };
 
@@ -857,7 +873,7 @@ async function mergeFirstPair(token) {
 async function growMemory(sourceNumber, resultNumber, token) {
   const source = pieces.get(sourceNumber);
   const result = pieces.get(resultNumber);
-  const duration = motionDuration(1760, 110);
+  const duration = motionDuration(3760, 110);
   const layout = {
     left: cssValue(result, "--x"),
     top: cssValue(result, "--y"),
@@ -905,7 +921,7 @@ async function growMemory(sourceNumber, resultNumber, token) {
 async function transformSix(token) {
   const source = pieces.get(6);
   const result = pieces.get(12);
-  const duration = motionDuration(1980, 100);
+  const duration = motionDuration(2980, 100);
   const layout = {
     left: cssValue(result, "--x"),
     top: cssValue(result, "--y"),
@@ -983,7 +999,7 @@ function fadeLoosePiece(piece, destination, duration, delay = 0) {
 }
 
 async function assembleOuterPieces(token) {
-  const duration = motionDuration(2180, 120);
+  const duration = motionDuration(3180, 120);
   const stagger = reduceMotion.matches ? 0 : 65;
   const sequence = [
     { number: 7, looseNumber: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "32%", top: "33%" } },
@@ -1033,13 +1049,13 @@ async function assembleOuterPieces(token) {
 async function completeCenterPiece(token) {
   const source = pieces.get(4);
   const center = assemblyPieces.get(10);
-  const moveDuration = motionDuration(1340, 90);
-  const revealDuration = motionDuration(1060, 80);
-  const centerLayout = { left: "50%", top: "50%", width: "25.5%", height: "45.33%" };
+  const moveDuration = motionDuration(2340, 90);
+  const revealDuration = motionDuration(2060, 80);
+  const centerLayout = { left: "50%", top: "50%", width: "26.5%", height: "34%" };
 
   const move = animatePieceTo(source, centerLayout, moveDuration, 0, {
     rotation: "0deg",
-    overshoot: 1.02,
+    overshoot: 1.005,
     opacity: 0.25
   });
   await animationFinished(move);
@@ -1050,7 +1066,7 @@ async function completeCenterPiece(token) {
   const reveal = center.animate(
     [
       { opacity: 0, filter: "brightness(1.25) blur(4px)", transform: "translate(38%,28%) scale(.48) rotate(-5deg)" },
-      { opacity: 1, filter: "brightness(1.09) blur(0px)", transform: "translate(0,0) scale(1.035) rotate(0deg)", offset: 0.78 },
+      { opacity: 1, filter: "brightness(1.035) blur(0px)", transform: "translate(0,0) scale(1.006) rotate(0deg)", offset: 0.88 },
       { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(0,0) scale(1) rotate(0deg)" }
     ],
     { duration: revealDuration, easing: "cubic-bezier(.18,.76,.2,1)", fill: "forwards" }
