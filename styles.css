@@ -665,10 +665,10 @@ button {
 .assembly-board,
 .final-board {
   position: absolute;
-  top: 14%;
-  left: 14%;
-  width: 72%;
-  height: 72%;
+  top: 6.8%;
+  left: 6.8%;
+  width: 86.4%;
+  height: 86.4%;
   pointer-events: none;
 }
 

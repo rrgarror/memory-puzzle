@@ -129,16 +129,16 @@ const shapePaths = {
 };
 
 const pieceDefinitions = [
-  { number: 1, x: "18%", y: "29%", w: "17%", h: "30.22%", rotation: "-7deg", z: 6, viewBox: "0 0 400 400", imageNumber: 1, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 2, x: "29%", y: "70%", w: "17%", h: "30.22%", rotation: "6deg", z: 5, viewBox: "0 0 400 400", imageNumber: 2, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 3, x: "44%", y: "28%", w: "17%", h: "30.22%", rotation: "4deg", z: 4, viewBox: "0 0 400 400", imageNumber: 3, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 4, x: "84%", y: "72%", w: "15%", h: "26.67%", rotation: "-5deg", z: 9, viewBox: "0 0 400 400", imageNumber: 4, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 5, x: "75%", y: "29%", w: "17%", h: "30.22%", rotation: "7deg", z: 3, viewBox: "0 0 400 400", imageNumber: 5, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 6, x: "57%", y: "72%", w: "17%", h: "30.22%", rotation: "-6deg", z: 8, viewBox: "0 0 400 400", imageNumber: 6, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
-  { number: 7, x: "26%", y: "49%", w: "28%", h: "30.63%", rotation: "-2deg", z: 12, viewBox: "0 0 520 320", imageNumber: 7, imageBox: { x: 0, y: 0, width: 520, height: 320 } },
-  { number: 8, x: "48%", y: "31%", w: "27%", h: "29.53%", rotation: "2deg", z: 13, viewBox: "440 0 520 320", imageNumber: 8, imageBox: { x: 440, y: 0, width: 520, height: 320 } },
-  { number: 9, x: "74%", y: "35%", w: "27%", h: "29.53%", rotation: "-2deg", z: 14, viewBox: "0 220 520 320", imageNumber: 9, imageBox: { x: 0, y: 220, width: 520, height: 320 } },
-  { number: 12, x: "62%", y: "70%", w: "27%", h: "29.53%", rotation: "-1deg", z: 15, viewBox: "440 220 520 320", imageNumber: 6, imageBox: { x: 440, y: 220, width: 520, height: 320 } }
+  { number: 1, x: "18%", y: "29%", w: "20.4%", h: "36.26%", rotation: "-7deg", z: 6, viewBox: "0 0 400 400", imageNumber: 1, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 2, x: "29%", y: "70%", w: "20.4%", h: "36.26%", rotation: "6deg", z: 5, viewBox: "0 0 400 400", imageNumber: 2, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 3, x: "44%", y: "28%", w: "20.4%", h: "36.26%", rotation: "4deg", z: 4, viewBox: "0 0 400 400", imageNumber: 3, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 4, x: "84%", y: "72%", w: "18%", h: "32%", rotation: "-5deg", z: 9, viewBox: "0 0 400 400", imageNumber: 4, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 5, x: "75%", y: "29%", w: "20.4%", h: "36.26%", rotation: "7deg", z: 3, viewBox: "0 0 400 400", imageNumber: 5, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 6, x: "57%", y: "72%", w: "20.4%", h: "36.26%", rotation: "-6deg", z: 8, viewBox: "0 0 400 400", imageNumber: 6, imageBox: { x: 0, y: 0, width: 400, height: 400 } },
+  { number: 7, x: "26%", y: "49%", w: "33.6%", h: "36.76%", rotation: "-2deg", z: 12, viewBox: "0 0 520 320", imageNumber: 7, imageBox: { x: 0, y: 0, width: 520, height: 320 } },
+  { number: 8, x: "48%", y: "31%", w: "32.4%", h: "35.44%", rotation: "2deg", z: 13, viewBox: "440 0 520 320", imageNumber: 8, imageBox: { x: 440, y: 0, width: 520, height: 320 } },
+  { number: 9, x: "74%", y: "35%", w: "32.4%", h: "35.44%", rotation: "-2deg", z: 14, viewBox: "0 220 520 320", imageNumber: 9, imageBox: { x: 0, y: 220, width: 520, height: 320 } },
+  { number: 12, x: "62%", y: "70%", w: "32.4%", h: "35.44%", rotation: "-1deg", z: 15, viewBox: "440 220 520 320", imageNumber: 6, imageBox: { x: 440, y: 220, width: 520, height: 320 } }
 ];
 
 const stepLabels = [
@@ -417,12 +417,14 @@ function resetMorphOverlay() {
   memoryMorph.hidden = true;
   clearStyle(memoryMorph, ["opacity"]);
   clearStyle(memoryMorph.querySelector(".memory-morph__veil"), ["opacity"]);
-  clearStyle(morphShell, ["left", "top", "opacity", "filter", "transform"]);
+  clearStyle(morphShell, ["left", "top", "width", "height", "opacity", "filter", "transform"]);
   clearStyle(morphDepth, ["opacity", "filter", "transform"]);
   clearStyle(morphFullImage, ["opacity", "filter"]);
   clearStyle(morphCropImage, ["opacity", "filter"]);
   morphFullImage.removeAttribute("href");
   morphCropImage.removeAttribute("href");
+  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
   [morphPath, morphDepth, morphEdge].forEach((path) => {
     path._morphVersion = (path._morphVersion || 0) + 1;
     path.querySelectorAll("animate").forEach((animation) => animation.remove());
@@ -608,7 +610,7 @@ async function unrollMat(token) {
   return true;
 }
 
-async function revealMemory(number, token) {
+async function revealMemory(number, token, options = {}) {
   const piece = pieces.get(number);
   const targetLeft = cssValue(piece, "--x");
   const targetTop = cssValue(piece, "--y");
@@ -621,11 +623,13 @@ async function revealMemory(number, token) {
   const startPath = pathForBox(aspectBox.x1, aspectBox.y1, aspectBox.x2, aspectBox.y2);
   const targetPath = shapePaths[number];
   const introDuration = motionDuration(1020, 70);
-  const morphDuration = motionDuration(1640, 110);
+  const morphDuration = motionDuration(options.placementDuration ?? 1640, 110);
   const source = `assets/images/photo${number}.jpg`;
 
   setSvgHref(morphFullImage, source);
   setSvgHref(morphCropImage, source);
+  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
   morphPath.setAttribute("d", startPath);
   morphDepth.setAttribute("d", startPath);
   morphEdge.setAttribute("d", startPath);
@@ -740,6 +744,169 @@ async function revealMemory(number, token) {
   return true;
 }
 
+function parseViewBox(value) {
+  const [x, y, width, height] = String(value).trim().split(/\s+/).map(Number);
+  return { x, y, width, height };
+}
+
+function sampledMorphPath(pathData, viewBox, pointCount = 96) {
+  const svg = morphShell.querySelector("svg");
+  const probe = document.createElementNS(SVG_NS, "path");
+  probe.setAttribute("d", pathData);
+  probe.setAttribute("visibility", "hidden");
+  probe.setAttribute("pointer-events", "none");
+  svg.appendChild(probe);
+
+  const totalLength = probe.getTotalLength();
+  const points = Array.from({ length: pointCount }, (_, index) => {
+    const point = probe.getPointAtLength((totalLength * index) / pointCount);
+    return {
+      x: ((point.x - viewBox.x) / viewBox.width) * 400,
+      y: ((point.y - viewBox.y) / viewBox.height) * 400
+    };
+  });
+  probe.remove();
+
+  return points.map((point, index) =>
+    `${index === 0 ? "M" : "L"}${round(point.x)} ${round(point.y)}`
+  ).join(" ") + " Z";
+}
+
+function unionFrame(elements) {
+  const stageRect = stage.getBoundingClientRect();
+  const rects = elements.map((element) => element.getBoundingClientRect());
+  const left = Math.min(...rects.map((rect) => rect.left));
+  const top = Math.min(...rects.map((rect) => rect.top));
+  const right = Math.max(...rects.map((rect) => rect.right));
+  const bottom = Math.max(...rects.map((rect) => rect.bottom));
+  return {
+    left: left - stageRect.left + (right - left) / 2,
+    top: top - stageRect.top + (bottom - top) / 2,
+    width: right - left,
+    height: bottom - top
+  };
+}
+
+function targetFrame(piece) {
+  const stageRect = stage.getBoundingClientRect();
+  return {
+    left: stageRect.width * percentNumber(cssValue(piece, "--x")) / 100,
+    top: stageRect.height * percentNumber(cssValue(piece, "--y")) / 100,
+    width: stageRect.width * percentNumber(cssValue(piece, "--w")) / 100,
+    height: stageRect.height * percentNumber(cssValue(piece, "--h")) / 100,
+    rotation: cssValue(piece, "--rotation") || "0deg"
+  };
+}
+
+async function morphLoosePieces({
+  sources,
+  sourcePath,
+  sourceViewBox,
+  sourceImage,
+  result,
+  targetPath,
+  targetImage,
+  duration,
+  token,
+  sourceRotation = "0deg",
+  showSourceImage = true
+}) {
+  const start = unionFrame(sources);
+  const target = targetFrame(result);
+  const targetViewBox = parseViewBox(result.querySelector("svg").getAttribute("viewBox"));
+  const veil = memoryMorph.querySelector(".memory-morph__veil");
+
+  veil.style.opacity = "0";
+  memoryMorph.hidden = false;
+
+  const fromPath = sampledMorphPath(sourcePath, sourceViewBox);
+  const toPath = sampledMorphPath(targetPath, targetViewBox);
+
+  [morphPath, morphDepth, morphEdge].forEach((path) => path.setAttribute("d", fromPath));
+  if (sourceImage) setSvgHref(morphFullImage, sourceImage);
+  setSvgHref(morphCropImage, targetImage);
+  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  morphFullImage.style.opacity = showSourceImage ? "1" : "0";
+  morphCropImage.style.opacity = "0";
+  morphDepth.style.opacity = "1";
+  morphDepth.style.transform = "translate(0, 10px)";
+  morphShell.style.left = `${start.left}px`;
+  morphShell.style.top = `${start.top}px`;
+  morphShell.style.width = `${start.width}px`;
+  morphShell.style.height = `${start.height}px`;
+  morphShell.style.opacity = "1";
+  morphShell.style.transform = `translate(-50%, -50%) rotate(${sourceRotation})`;
+
+  const shellAnimation = morphShell.animate(
+    [
+      {
+        left: `${start.left}px`,
+        top: `${start.top}px`,
+        width: `${start.width}px`,
+        height: `${start.height}px`,
+        filter: "brightness(1)",
+        transform: `translate(-50%, -50%) rotate(${sourceRotation}) scale(1)`
+      },
+      {
+        left: `${target.left}px`,
+        top: `${target.top}px`,
+        width: `${target.width * 1.012}px`,
+        height: `${target.height * 1.012}px`,
+        filter: "brightness(1.045)",
+        transform: `translate(-50%, -50%) rotate(${target.rotation}) scale(1.012)`,
+        offset: 0.88
+      },
+      {
+        left: `${target.left}px`,
+        top: `${target.top}px`,
+        width: `${target.width}px`,
+        height: `${target.height}px`,
+        filter: "brightness(1)",
+        transform: `translate(-50%, -50%) rotate(${target.rotation}) scale(1)`
+      }
+    ],
+    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
+  );
+
+  const sourceFade = morphFullImage.animate(
+    showSourceImage
+      ? [{ opacity: 1 }, { opacity: 0.92, offset: 0.3 }, { opacity: 0 }]
+      : [{ opacity: 0 }, { opacity: 0 }],
+    { duration: duration * 0.72, easing: "ease-in", fill: "forwards" }
+  );
+  const targetReveal = morphCropImage.animate(
+    [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1 }],
+    { duration: duration * 0.86, delay: duration * 0.1, easing: "ease-out", fill: "forwards" }
+  );
+  const sourceAnimations = sources.map((source) => source.animate(
+    [{ opacity: 1 }, { opacity: 0.82, offset: 0.22 }, { opacity: 0 }],
+    { duration: duration * 0.55, easing: "ease-in", fill: "forwards" }
+  ));
+  const pathMorphs = [
+    morphSvgPath(morphPath, fromPath, toPath, duration),
+    morphSvgPath(morphDepth, fromPath, toPath, duration),
+    morphSvgPath(morphEdge, fromPath, toPath, duration)
+  ];
+
+  await Promise.all([
+    waitForAnimations([shellAnimation, sourceFade, targetReveal, ...sourceAnimations]),
+    ...pathMorphs
+  ]);
+  if (token !== runId) return false;
+
+  sources.forEach((source) => {
+    cancelAnimations(source, true);
+    clearPieceState(source);
+    source.hidden = true;
+  });
+  cancelAnimations(result, true);
+  clearPieceState(result);
+  result.hidden = false;
+  resetMorphOverlay();
+  return true;
+}
+
 function currentPieceFrame(piece) {
   const style = getComputedStyle(piece);
   return {
@@ -813,8 +980,8 @@ async function mergeFirstPair(token) {
   const result = pieces.get(7);
   const moveDuration = motionDuration(2380, 100);
   const changeDuration = motionDuration(2020, 90);
-  const leftLayout = { left: "18%", top: "50%", width: "18.67%", height: "33.19%" };
-  const rightLayout = { left: "32%", top: "50%", width: "18.67%", height: "33.19%" };
+  const leftLayout = { left: "18%", top: "50%", width: "22.4%", height: "39.83%" };
+  const rightLayout = { left: "32%", top: "50%", width: "22.4%", height: "39.83%" };
 
   await waitForAnimations([
     animatePieceTo(first, leftLayout, moveDuration, 0, { overshoot: 1.01 }),
@@ -831,140 +998,58 @@ async function mergeFirstPair(token) {
   if (token !== runId) return false;
   await pause(motionDuration(240, 0));
 
-  result.hidden = false;
-  result.style.left = "25%";
-  result.style.top = "50%";
-  result.style.opacity = "0";
-  result.style.filter = "brightness(1.2) blur(3px)";
-  result.style.transform = "translate(-50%, -50%) rotate(0deg) scale(.9)";
-
-  const resultReveal = result.animate(
-    [
-      { opacity: 0, filter: "brightness(1.24) blur(4px)", transform: "translate(-50%, -50%) rotate(0deg) scale(.9)" },
-      { opacity: 1, filter: "brightness(1.07) blur(0px)", transform: "translate(-50%, -50%) rotate(-1deg) scale(1.025)", offset: 0.78 },
-      { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(-50%, -50%) rotate(-2deg) scale(1)" }
-    ],
-    { duration: changeDuration, easing: "cubic-bezier(.18,.74,.22,1)", fill: "forwards" }
-  );
-  const firstFade = first.animate([{ opacity: 1 }, { opacity: 0 }], {
-    duration: changeDuration * 0.7,
-    easing: "ease-in",
-    fill: "forwards"
+  return morphLoosePieces({
+    sources: [first, second],
+    sourcePath: pathForBox(50, 50, 650, 350, { right: 1, bottom: -1 }),
+    sourceViewBox: { x: 0, y: 0, width: 700, height: 400 },
+    sourceImage: null,
+    result,
+    targetPath: shapePaths[7],
+    targetImage: "assets/images/photo7.jpg",
+    duration: changeDuration,
+    token,
+    showSourceImage: false
   });
-  const secondFade = second.animate([{ opacity: 1 }, { opacity: 0 }], {
-    duration: changeDuration * 0.7,
-    easing: "ease-in",
-    fill: "forwards"
-  });
-  await waitForAnimations([resultReveal, firstFade, secondFade]);
-  if (token !== runId) return false;
-
-  [first, second].forEach((piece) => {
-    cancelAnimations(piece);
-    clearPieceState(piece);
-    piece.hidden = true;
-  });
-  cancelAnimations(result);
-  clearPieceState(result);
-  result.hidden = false;
-  return true;
 }
 
 async function growMemory(sourceNumber, resultNumber, token) {
   const source = pieces.get(sourceNumber);
   const result = pieces.get(resultNumber);
-  const duration = motionDuration(3760, 110);
-  const layout = {
-    left: cssValue(result, "--x"),
-    top: cssValue(result, "--y"),
-    width: cssValue(result, "--w"),
-    height: cssValue(result, "--h")
-  };
-  const rotation = cssValue(result, "--rotation") || "0deg";
+  const duration = motionDuration(4320, 110);
+  const sourceViewBox = parseViewBox(source.querySelector("svg").getAttribute("viewBox"));
 
-  result.hidden = false;
-  result.style.left = layout.left;
-  result.style.top = layout.top;
-  result.style.width = layout.width;
-  result.style.height = layout.height;
-  result.style.opacity = "0";
-  result.style.transform = `translate(-50%, -50%) rotate(${rotation}) scale(.92)`;
-
-  const sourceGrow = animatePieceTo(source, layout, duration, 0, {
-    rotation,
-    overshoot: 1.045,
-    opacity: 0
+  return morphLoosePieces({
+    sources: [source],
+    sourcePath: shapePaths[sourceNumber],
+    sourceViewBox,
+    sourceImage: `assets/images/photo${sourceNumber}.jpg`,
+    result,
+    targetPath: shapePaths[resultNumber],
+    targetImage: `assets/images/photo${resultNumber}.jpg`,
+    duration,
+    token,
+    sourceRotation: cssValue(source, "--rotation") || "0deg"
   });
-  const resultReveal = result.animate(
-    [
-      { opacity: 0, filter: "brightness(1.22) blur(4px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.92)` },
-      { opacity: 0, filter: "brightness(1.18) blur(3px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.98)`, offset: 0.28 },
-      { opacity: 1, filter: "brightness(1.06) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1.025)`, offset: 0.84 },
-      { opacity: 1, filter: "brightness(1) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1)` }
-    ],
-    { duration, delay: motionDuration(560, 0), easing: "cubic-bezier(.18,.74,.22,1)", fill: "forwards" }
-  );
-  const flash = snapAt(layout.left, layout.top, "24%", duration);
-
-  await waitForAnimations([sourceGrow, resultReveal, flash]);
-  if (token !== runId) return false;
-
-  cancelAnimations(source);
-  clearPieceState(source);
-  source.hidden = true;
-  cancelAnimations(result);
-  clearPieceState(result);
-  result.hidden = false;
-  return true;
 }
 
 async function transformSix(token) {
   const source = pieces.get(6);
   const result = pieces.get(12);
-  const duration = motionDuration(2980, 100);
-  const layout = {
-    left: cssValue(result, "--x"),
-    top: cssValue(result, "--y"),
-    width: cssValue(result, "--w"),
-    height: cssValue(result, "--h")
-  };
-  const rotation = cssValue(result, "--rotation") || "0deg";
+  const duration = motionDuration(2480, 100);
+  const sourceViewBox = parseViewBox(source.querySelector("svg").getAttribute("viewBox"));
 
-  result.hidden = false;
-  result.style.left = layout.left;
-  result.style.top = layout.top;
-  result.style.width = layout.width;
-  result.style.height = layout.height;
-  result.style.opacity = "0";
-  result.style.filter = "brightness(1.16) blur(3px)";
-  result.style.transform = `translate(-50%, -50%) rotate(${rotation}) scale(.86)`;
-
-  const movement = animatePieceTo(source, layout, duration, 0, {
-    rotation,
-    overshoot: 1.025,
-    opacity: 0
+  return morphLoosePieces({
+    sources: [source],
+    sourcePath: shapePaths[6],
+    sourceViewBox,
+    sourceImage: "assets/images/photo6.jpg",
+    result,
+    targetPath: shapePaths[12],
+    targetImage: "assets/images/photo6.jpg",
+    duration,
+    token,
+    sourceRotation: cssValue(source, "--rotation") || "0deg"
   });
-  const reveal = result.animate(
-    [
-      { opacity: 0, filter: "brightness(1.16) blur(3px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.86)` },
-      { opacity: 0, filter: "brightness(1.12) blur(2px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(.92)`, offset: 0.34 },
-      { opacity: 1, filter: "brightness(1.04) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1.018)`, offset: 0.88 },
-      { opacity: 1, filter: "brightness(1) blur(0px)", transform: `translate(-50%, -50%) rotate(${rotation}) scale(1)` }
-    ],
-    { duration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
-  );
-  const glow = snapAt(layout.left, layout.top, "23%", duration);
-
-  await waitForAnimations([movement, reveal, glow]);
-  if (token !== runId) return false;
-
-  cancelAnimations(source);
-  clearPieceState(source);
-  source.hidden = true;
-  cancelAnimations(result);
-  clearPieceState(result);
-  result.hidden = false;
-  return true;
 }
 
 function fadeLoosePiece(piece, destination, duration, delay = 0) {
@@ -999,13 +1084,13 @@ function fadeLoosePiece(piece, destination, duration, delay = 0) {
 }
 
 async function assembleOuterPieces(token) {
-  const duration = motionDuration(3180, 120);
+  const duration = motionDuration(2680, 120);
   const stagger = reduceMotion.matches ? 0 : 65;
   const sequence = [
-    { number: 7, looseNumber: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "32%", top: "33%" } },
-    { number: 8, looseNumber: 8, start: "translate(18%,-18%) scale(.82) rotate(2deg)", destination: { left: "68%", top: "33%" } },
-    { number: 9, looseNumber: 9, start: "translate(-18%,18%) scale(.82) rotate(2deg)", destination: { left: "32%", top: "67%" } },
-    { number: 6, looseNumber: 12, start: "translate(18%,18%) scale(.82) rotate(-2deg)", destination: { left: "68%", top: "67%" } }
+    { number: 7, looseNumber: 7, start: "translate(-18%,-18%) scale(.82) rotate(-2deg)", destination: { left: "28.5%", top: "28.5%" } },
+    { number: 8, looseNumber: 8, start: "translate(18%,-18%) scale(.82) rotate(2deg)", destination: { left: "71.5%", top: "28.5%" } },
+    { number: 9, looseNumber: 9, start: "translate(-18%,18%) scale(.82) rotate(2deg)", destination: { left: "28.5%", top: "71.5%" } },
+    { number: 6, looseNumber: 12, start: "translate(18%,18%) scale(.82) rotate(-2deg)", destination: { left: "71.5%", top: "71.5%" } }
   ];
 
   assemblyBoard.hidden = false;
@@ -1051,22 +1136,51 @@ async function completeCenterPiece(token) {
   const center = assemblyPieces.get(10);
   const moveDuration = motionDuration(2340, 90);
   const revealDuration = motionDuration(2060, 80);
-  const centerLayout = { left: "50%", top: "50%", width: "26.5%", height: "34%" };
+  const centerLayout = { left: "50%", top: "50%", width: "31.8%", height: "40.8%" };
+  const start = currentPieceFrame(source);
 
-  const move = animatePieceTo(source, centerLayout, moveDuration, 0, {
-    rotation: "0deg",
-    overshoot: 1.005,
-    opacity: 0.25
-  });
+  const move = source.animate(
+    [
+      {
+        left: start.left,
+        top: start.top,
+        width: start.width,
+        height: start.height,
+        opacity: 1,
+        filter: start.filter,
+        transform: start.transform
+      },
+      {
+        left: "50%",
+        top: "7%",
+        width: centerLayout.width,
+        height: centerLayout.height,
+        opacity: 0.96,
+        filter: "brightness(1.08) blur(0px)",
+        transform: "translate(-50%, -50%) rotate(0deg) scale(.965)",
+        offset: 0.44
+      },
+      {
+        left: centerLayout.left,
+        top: centerLayout.top,
+        width: centerLayout.width,
+        height: centerLayout.height,
+        opacity: 0.25,
+        filter: "brightness(1) blur(0px)",
+        transform: "translate(-50%, -50%) rotate(0deg) scale(1.005)"
+      }
+    ],
+    { duration: moveDuration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
+  );
   await animationFinished(move);
   if (token !== runId) return false;
 
   center.style.opacity = "0";
-  center.style.transform = "translate(38%,28%) scale(.48) rotate(-5deg)";
+  center.style.transform = "translate(0,-62%) scale(.58) rotate(-2deg)";
   const reveal = center.animate(
     [
-      { opacity: 0, filter: "brightness(1.25) blur(4px)", transform: "translate(38%,28%) scale(.48) rotate(-5deg)" },
-      { opacity: 1, filter: "brightness(1.035) blur(0px)", transform: "translate(0,0) scale(1.006) rotate(0deg)", offset: 0.88 },
+      { opacity: 0, filter: "brightness(1.25) blur(4px)", transform: "translate(0,-62%) scale(.58) rotate(-2deg)" },
+      { opacity: 1, filter: "brightness(1.035) blur(0px)", transform: "translate(0,-1%) scale(1.006) rotate(0deg)", offset: 0.88 },
       { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(0,0) scale(1) rotate(0deg)" }
     ],
     { duration: revealDuration, easing: "cubic-bezier(.18,.76,.2,1)", fill: "forwards" }
@@ -1236,7 +1350,7 @@ async function revealFinalPhotograph(token) {
 async function unrollAndPlaceFirstMemory(token) {
   const unrolled = await unrollMat(token);
   if (!unrolled || token !== runId) return false;
-  return revealMemory(1, token);
+  return revealMemory(1, token, { placementDuration: 640 });
 }
 
 async function transformAndAssemble(token) {
