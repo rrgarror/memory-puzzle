@@ -152,8 +152,8 @@ const stepLabels = [
   "Grow the farm puzzle piece",
   "Grow the friends puzzle piece",
   "Transform the championship piece and assemble the four outer pieces",
-  "Complete the puzzle with the center piece",
-  "Reveal the final photograph"
+  "Show photo 10, morph it, and place it in the center",
+  "Flip all five pieces to reveal the final photograph"
 ];
 
 const completionMessages = [
@@ -167,8 +167,8 @@ const completionMessages = [
   "The farm piece grew and changed",
   "The friends piece grew and changed",
   "The championship piece changed and all four outer pieces assembled",
-  "The center piece completed the puzzle",
-  "The final photograph is displayed as a puzzle"
+  "Photo 10 became the flat center piece and completed the puzzle",
+  "All five pieces flipped together to reveal the final photograph"
 ];
 
 function buildLoosePieces() {
@@ -294,7 +294,7 @@ function buildFinalBoard() {
       <path class="final-piece-depth final-piece-depth--bevel" d="${path}"></path>
       <image
         class="final-photo"
-        href="assets/images/photo11.jpg"
+        href="assets/images/photo11.JPG"
         x="0"
         y="0"
         width="960"
@@ -446,6 +446,7 @@ function resetPuzzle({ announce = true } = {}) {
     cancelAnimations(element, true);
     clearStyle(element, ["left", "opacity", "filter", "transform"]);
   });
+  matScene.hidden = false;
 
   for (const [number, piece] of pieces) {
     cancelAnimations(piece, true);
@@ -472,6 +473,7 @@ function resetPuzzle({ announce = true } = {}) {
   clearStyle(assemblyBoard, ["opacity", "filter", "transform"]);
   assemblyPieces.forEach((piece) => {
     clearStyle(piece, ["opacity", "filter", "transform"]);
+    piece.querySelectorAll(".assembly-depth").forEach((depth) => clearStyle(depth, ["opacity"]));
     piece.style.opacity = "0";
   });
 
@@ -978,8 +980,8 @@ async function mergeFirstPair(token) {
   const first = pieces.get(1);
   const second = pieces.get(2);
   const result = pieces.get(7);
-  const moveDuration = motionDuration(2380, 100);
-  const changeDuration = motionDuration(2020, 90);
+  const moveDuration = motionDuration(1380, 100);
+  const changeDuration = motionDuration(1020, 90);
   const leftLayout = { left: "18%", top: "50%", width: "22.4%", height: "39.83%" };
   const rightLayout = { left: "32%", top: "50%", width: "22.4%", height: "39.83%" };
 
@@ -1015,7 +1017,7 @@ async function mergeFirstPair(token) {
 async function growMemory(sourceNumber, resultNumber, token) {
   const source = pieces.get(sourceNumber);
   const result = pieces.get(resultNumber);
-  const duration = motionDuration(4320, 110);
+  const duration = motionDuration(3320, 110);
   const sourceViewBox = parseViewBox(source.querySelector("svg").getAttribute("viewBox"));
 
   return morphLoosePieces({
@@ -1134,82 +1136,215 @@ async function assembleOuterPieces(token) {
 async function completeCenterPiece(token) {
   const source = pieces.get(4);
   const center = assemblyPieces.get(10);
-  const moveDuration = motionDuration(2340, 90);
-  const revealDuration = motionDuration(2060, 80);
-  const centerLayout = { left: "50%", top: "50%", width: "31.8%", height: "40.8%" };
-  const start = currentPieceFrame(source);
+  const introDuration = motionDuration(1100, 90);
+  const holdDuration = motionDuration(420, 0);
+  const shapeDuration = motionDuration(1500, 110);
+  const placementDuration = motionDuration(1300, 100);
+  const settleDuration = motionDuration(420, 80);
+  const stageRect = stage.getBoundingClientRect();
+  const boardRect = assemblyBoard.getBoundingClientRect();
+  const displaySize = Math.min(stageRect.width * 0.62, stageRect.height * 0.78);
+  const photoRatio = 2000 / 2828;
+  const photoBox = aspectRectangle(photoRatio);
+  const originalPath = pathForBox(photoBox.x1, photoBox.y1, photoBox.x2, photoBox.y2);
+  const centerViewBox = { x: 285, y: 130, width: 390, height: 280 };
+  const target = {
+    left: boardRect.left - stageRect.left + boardRect.width / 2,
+    top: boardRect.top - stageRect.top + boardRect.height / 2,
+    width: boardRect.width * centerViewBox.width / 960,
+    height: boardRect.height * centerViewBox.height / 540
+  };
+  const veil = memoryMorph.querySelector(".memory-morph__veil");
 
-  const move = source.animate(
-    [
-      {
-        left: start.left,
-        top: start.top,
-        width: start.width,
-        height: start.height,
-        opacity: 1,
-        filter: start.filter,
-        transform: start.transform
-      },
-      {
-        left: "50%",
-        top: "7%",
-        width: centerLayout.width,
-        height: centerLayout.height,
-        opacity: 0.96,
-        filter: "brightness(1.08) blur(0px)",
-        transform: "translate(-50%, -50%) rotate(0deg) scale(.965)",
-        offset: 0.44
-      },
-      {
-        left: centerLayout.left,
-        top: centerLayout.top,
-        width: centerLayout.width,
-        height: centerLayout.height,
-        opacity: 0.25,
-        filter: "brightness(1) blur(0px)",
-        transform: "translate(-50%, -50%) rotate(0deg) scale(1.005)"
-      }
-    ],
-    { duration: moveDuration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
-  );
-  await animationFinished(move);
+  memoryMorph.hidden = false;
+  const fromPath = sampledMorphPath(originalPath, { x: 0, y: 0, width: 400, height: 400 });
+  const toPath = sampledMorphPath(boardPaths[10], centerViewBox);
+  [morphPath, morphDepth, morphEdge].forEach((path) => path.setAttribute("d", fromPath));
+  setSvgHref(morphFullImage, "assets/images/photo10.jpg");
+  setSvgHref(morphCropImage, "assets/images/photo10.jpg");
+  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  morphFullImage.style.opacity = "0";
+  morphCropImage.style.opacity = "0";
+  morphDepth.style.opacity = "0";
+  morphDepth.style.transform = "translate(0, 10px)";
+  morphShell.style.left = "50%";
+  morphShell.style.top = "50%";
+  morphShell.style.width = `${displaySize}px`;
+  morphShell.style.height = `${displaySize}px`;
+  morphShell.style.opacity = "0";
+  morphShell.style.transform = "translate(-50%, -50%) scale(1.08)";
+  veil.style.opacity = "0";
+
+  const intro = [
+    matScene.animate(
+      [
+        { opacity: 1, filter: "brightness(1)" },
+        { opacity: 0, filter: "brightness(.55) blur(5px)" }
+      ],
+      { duration: introDuration, easing: "ease-in", fill: "forwards" }
+    ),
+    source.animate([{ opacity: 1 }, { opacity: 0 }], {
+      duration: introDuration * 0.68,
+      easing: "ease-in",
+      fill: "forwards"
+    }),
+    veil.animate([{ opacity: 0 }, { opacity: 0.82 }], {
+      duration: introDuration,
+      easing: "ease-out",
+      fill: "forwards"
+    }),
+    morphShell.animate(
+      [
+        { opacity: 0, filter: "brightness(.78) blur(4px)", transform: "translate(-50%, -50%) scale(1.08)" },
+        { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(-50%, -50%) scale(1)" }
+      ],
+      { duration: introDuration, easing: "cubic-bezier(.18,.76,.2,1)", fill: "forwards" }
+    ),
+    morphFullImage.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: introDuration * 0.8,
+      easing: "ease-out",
+      fill: "forwards"
+    })
+  ];
+
+  await waitForAnimations(intro);
   if (token !== runId) return false;
-
-  center.style.opacity = "0";
-  center.style.transform = "translate(0,-62%) scale(.58) rotate(-2deg)";
-  const reveal = center.animate(
-    [
-      { opacity: 0, filter: "brightness(1.25) blur(4px)", transform: "translate(0,-62%) scale(.58) rotate(-2deg)" },
-      { opacity: 1, filter: "brightness(1.035) blur(0px)", transform: "translate(0,-1%) scale(1.006) rotate(0deg)", offset: 0.88 },
-      { opacity: 1, filter: "brightness(1) blur(0px)", transform: "translate(0,0) scale(1) rotate(0deg)" }
-    ],
-    { duration: revealDuration, easing: "cubic-bezier(.18,.76,.2,1)", fill: "forwards" }
-  );
-  const sourceFade = source.animate([{ opacity: 0.25 }, { opacity: 0 }], {
-    duration: revealDuration * 0.7,
-    easing: "ease-in",
-    fill: "forwards"
-  });
-  const flash = snapAt("50%", "50%", "23%", revealDuration);
-  await waitForAnimations([reveal, sourceFade, flash]);
-  if (token !== runId) return false;
-
-  cancelAnimations(source);
+  cancelAnimations(matScene, true);
+  matScene.hidden = true;
+  cancelAnimations(source, true);
   clearPieceState(source);
   source.hidden = true;
-  cancelAnimations(center);
-  center.style.opacity = "1";
-  center.style.filter = "brightness(1) blur(0px)";
+  await pause(holdDuration);
+  if (token !== runId) return false;
+
+  const shapeChange = morphShell.animate(
+    [
+      {
+        filter: "brightness(1)",
+        transform: "translate(-50%, -50%) scale(1)"
+      },
+      {
+        filter: "brightness(1.07)",
+        transform: "translate(-50%, -50%) scale(1.018)",
+        offset: 0.78
+      },
+      {
+        filter: "brightness(1)",
+        transform: "translate(-50%, -50%) scale(1)"
+      }
+    ],
+    { duration: shapeDuration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
+  );
+  const fullFade = morphFullImage.animate(
+    [{ opacity: 1 }, { opacity: 0.92, offset: 0.3 }, { opacity: 0 }],
+    { duration: shapeDuration * 0.72, easing: "ease-in", fill: "forwards" }
+  );
+  const cropReveal = morphCropImage.animate(
+    [{ opacity: 0 }, { opacity: 0, offset: 0.16 }, { opacity: 1 }],
+    { duration: shapeDuration * 0.88, delay: shapeDuration * 0.08, easing: "ease-out", fill: "forwards" }
+  );
+  const depthReveal = morphDepth.animate(
+    [
+      { opacity: 0, transform: "translate(0, 0)" },
+      { opacity: 0, transform: "translate(0, 0)", offset: 0.28 },
+      { opacity: 0.9, transform: "translate(0, 10px)" }
+    ],
+    { duration: shapeDuration, easing: "ease-out", fill: "forwards" }
+  );
+  const pathMorphs = [
+    morphSvgPath(morphPath, fromPath, toPath, shapeDuration),
+    morphSvgPath(morphDepth, fromPath, toPath, shapeDuration),
+    morphSvgPath(morphEdge, fromPath, toPath, shapeDuration)
+  ];
+
+  await Promise.all([
+    waitForAnimations([shapeChange, fullFade, cropReveal, depthReveal]),
+    ...pathMorphs
+  ]);
+  if (token !== runId) return false;
+
+  const placement = morphShell.animate(
+    [
+      {
+        left: "50%",
+        top: "50%",
+        width: `${displaySize}px`,
+        height: `${displaySize}px`,
+        filter: "brightness(1)",
+        transform: "translate(-50%, -50%) scale(1)"
+      },
+      {
+        left: `${target.left}px`,
+        top: `${target.top}px`,
+        width: `${target.width * 1.015}px`,
+        height: `${target.height * 1.015}px`,
+        filter: "brightness(1.055)",
+        transform: "translate(-50%, -50%) scale(1.015)",
+        offset: 0.88
+      },
+      {
+        left: `${target.left}px`,
+        top: `${target.top}px`,
+        width: `${target.width}px`,
+        height: `${target.height}px`,
+        filter: "brightness(1)",
+        transform: "translate(-50%, -50%) scale(1)"
+      }
+    ],
+    { duration: placementDuration, easing: "cubic-bezier(.22,.82,.2,1)", fill: "forwards" }
+  );
+  const depthFlatten = morphDepth.animate(
+    [
+      { opacity: 0.9, transform: "translate(0, 10px)" },
+      { opacity: 0.82, transform: "translate(0, 7px)", offset: 0.64 },
+      { opacity: 0, transform: "translate(0, 0)" }
+    ],
+    { duration: placementDuration, easing: "ease-in-out", fill: "forwards" }
+  );
+  const backgroundReveal = veil.animate(
+    [{ opacity: 0.82 }, { opacity: 0 }],
+    { duration: placementDuration, easing: "ease-in", fill: "forwards" }
+  );
+
+  await waitForAnimations([placement, depthFlatten, backgroundReveal]);
+  if (token !== runId) return false;
+
+  center.querySelectorAll(".assembly-depth").forEach((depth) => {
+    depth.style.opacity = "0";
+  });
+  center.style.opacity = "0";
+  center.style.filter = "brightness(1.05)";
   center.style.transform = "translate(0,0) scale(1) rotate(0deg)";
+  const settle = center.animate(
+    [
+      { opacity: 0, filter: "brightness(1.12)" },
+      { opacity: 1, filter: "brightness(1)" }
+    ],
+    { duration: settleDuration, easing: "ease-out", fill: "forwards" }
+  );
+  const overlayFade = morphShell.animate([{ opacity: 1 }, { opacity: 0 }], {
+    duration: settleDuration,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+  const flash = snapAt("50%", "50%", "23%", settleDuration);
+  await waitForAnimations([settle, overlayFade, flash]);
+  if (token !== runId) return false;
+
+  cancelAnimations(center, true);
+  center.style.opacity = "1";
+  center.style.filter = "brightness(1)";
+  center.style.transform = "translate(0,0) scale(1) rotate(0deg)";
+  resetMorphOverlay();
   stage.classList.add("is-complete");
   return true;
 }
 
 async function revealFinalPhotograph(token) {
-  const totalDuration = 15000;
-  const pieceDuration = reduceMotion.matches ? 160 : totalDuration / 5;
-  const halfTurn = pieceDuration / 2;
-  const finishDuration = reduceMotion.matches ? 90 : 1000;
+  const totalDuration = 3000;
+  const halfTurn = reduceMotion.matches ? 90 : totalDuration / 2;
+  const finishDuration = reduceMotion.matches ? 90 : 600;
   const finishDelay = reduceMotion.matches ? 0 : totalDuration - finishDuration;
   const revealOrder = [7, 8, 9, 6, 10];
 
@@ -1227,11 +1362,11 @@ async function revealFinalPhotograph(token) {
   finalOuterEdge.style.opacity = "0";
 
   const flipAnimations = [];
-  revealOrder.forEach((number, index) => {
+  revealOrder.forEach((number) => {
     const oldPiece = assemblyPieces.get(number);
     const newPiece = finalRegions.get(number);
-    const direction = index % 2 === 0 ? 1 : -1;
-    const delay = reduceMotion.matches ? index * pieceDuration : index * pieceDuration;
+    const direction = 1;
+    const delay = 0;
 
     flipAnimations.push(oldPiece.animate(
       [
