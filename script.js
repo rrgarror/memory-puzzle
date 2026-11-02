@@ -482,6 +482,7 @@ function resetPuzzle({ announce = true } = {}) {
   resetMorphOverlay();
 
   cancelAnimations(assemblyBoard, true);
+  assemblyBoard.classList.remove("is-flat");
   assemblyBoard.hidden = true;
   clearStyle(assemblyBoard, ["opacity", "filter", "transform"]);
   assemblyPieces.forEach((piece) => {
@@ -491,6 +492,7 @@ function resetPuzzle({ announce = true } = {}) {
   });
 
   cancelAnimations(finalBoard, true);
+  finalBoard.classList.remove("is-flat");
   finalBoard.hidden = true;
   clearStyle(finalBoard, ["opacity", "filter", "transform", "transform-origin"]);
   finalRegions.forEach((region) => clearStyle(region, ["opacity", "filter", "transform"]));
@@ -1410,7 +1412,14 @@ async function completeCenterPiece(token) {
     [{ opacity: 0.82 }, { opacity: 0 }],
     { duration: placementDuration, easing: "ease-in", fill: "forwards" }
   );
-  const flatOuterDepths = [6, 7].flatMap((number) =>
+  const boardFlatten = assemblyBoard.animate(
+    [
+      { filter: getComputedStyle(assemblyBoard).filter },
+      { filter: "none" }
+    ],
+    { duration: placementDuration, easing: "ease-in-out", fill: "forwards" }
+  );
+  const flatOuterDepths = [7, 8, 9, 6].flatMap((number) =>
     [...assemblyPieces.get(number).querySelectorAll(".assembly-depth")]
   );
   const outerFlattenAnimations = flatOuterDepths.map((depth) => depth.animate(
@@ -1426,6 +1435,7 @@ async function completeCenterPiece(token) {
     placement,
     depthFlatten,
     backgroundReveal,
+    boardFlatten,
     ...outerFlattenAnimations
   ]);
   if (token !== runId) return false;
@@ -1434,6 +1444,8 @@ async function completeCenterPiece(token) {
     cancelAnimations(depth);
     depth.style.opacity = "0";
   });
+  cancelAnimations(assemblyBoard);
+  assemblyBoard.classList.add("is-flat");
 
   center.querySelectorAll(".assembly-depth").forEach((depth) => {
     depth.style.opacity = "0";
@@ -1473,9 +1485,10 @@ async function revealFinalPhotograph(token) {
   const finishDelay = reduceMotion.matches ? 0 : totalDuration - finishDuration;
   const revealOrder = [7, 8, 9, 6, 10];
 
+  finalBoard.classList.add("is-flat");
   finalBoard.hidden = false;
   finalBoard.style.opacity = "1";
-  finalBoard.style.filter = "brightness(1)";
+  finalBoard.style.filter = "none";
   finalBoard.style.transform = "none";
   finalRegions.forEach((region) => {
     region.style.opacity = "0";
@@ -1589,7 +1602,7 @@ async function revealFinalPhotograph(token) {
   clearStyle(assemblyBoard, ["opacity", "filter", "transform"]);
   cancelAnimations(finalBoard);
   finalBoard.style.opacity = "1";
-  finalBoard.style.filter = "brightness(1)";
+  finalBoard.style.filter = "none";
   finalBoard.style.transform = "none";
   finalRegions.forEach((region) => {
     cancelAnimations(region);

@@ -682,6 +682,31 @@ button {
   transform-style: preserve-3d;
 }
 
+.assembly-board.is-flat {
+  perspective: none;
+  filter: none;
+  transform-style: flat;
+}
+
+.assembly-board.is-flat .assembly-piece {
+  transform-style: flat;
+}
+
+.assembly-board.is-flat .assembly-depth {
+  opacity: 0 !important;
+}
+
+.assembly-board.is-flat .assembly-texture,
+.assembly-board.is-flat .assembly-sheen {
+  opacity: 0;
+}
+
+.assembly-board.is-flat .assembly-edge {
+  stroke: rgba(235, 245, 247, 0.76);
+  stroke-width: 1.7;
+  filter: none;
+}
+
 .final-board {
   z-index: 32;
   overflow: visible;
@@ -692,6 +717,40 @@ button {
   perspective: 1600px;
   transform-style: preserve-3d;
   will-change: opacity, transform, filter;
+}
+
+.final-board.is-flat {
+  filter: none;
+}
+
+.final-board.is-flat .final-piece-depth {
+  opacity: 0 !important;
+}
+
+.final-board.is-flat .final-piece-texture,
+.final-board.is-flat .final-piece-sheen {
+  opacity: 0;
+}
+
+.final-board.is-flat .final-piece-edge,
+.final-board.is-flat .final-seams,
+.final-board.is-flat .final-outer-edge {
+  filter: none;
+}
+
+.final-board.is-flat .final-piece-edge {
+  stroke: rgba(235, 245, 247, 0.76);
+  stroke-width: 1.7;
+}
+
+.final-board.is-flat .final-seams {
+  stroke: rgba(235, 245, 247, 0.78);
+  stroke-width: 1.8;
+}
+
+.final-board.is-flat .final-outer-edge {
+  stroke: rgba(235, 245, 247, 0.82);
+  stroke-width: 1.9;
 }
 
 .assembly-board svg,

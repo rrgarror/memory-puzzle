@@ -14,8 +14,8 @@ This is a self-contained, click-through photo puzzle. The interface contains no 
 8. Piece 3 morphs and grows into the final upper-right piece shape while changing to photo 8, using a single visible piece throughout. This stage is one second shorter.
 9. Piece 5 morphs and grows into the final lower-left piece shape while changing to photo 9. This stage is also one second shorter.
 10. Piece 6 morphs into the final lower-right shape, then all four outer pieces assemble automatically during the same click. This click is one second faster than in the previous version.
-11. The original rectangular photo 10 appears above all the pieces while the mat disappears. It then morphs into the center-piece contour, moves into the middle, and becomes flat once seated. Pieces 6 and 7 also flatten during this same click.
-12. All five pieces flip simultaneously over exactly three seconds to reveal photo 11, with every puzzle seam remaining visible.
+11. The original rectangular photo 10 appears above all the pieces while the mat disappears. It then morphs into the center-piece contour, moves into the middle, and becomes flat once seated. All four surrounding pieces flatten during this same click. Their side-depth layers, bevel highlights, surface sheen, and board drop shadow disappear, leaving the entire five-piece puzzle genuinely 2D while retaining the puzzle seams.
+12. All five pieces flip simultaneously over exactly three seconds to reveal photo 11. The photo-11 pieces have no side depth, bevel, sheen, or raised shadows, so the final puzzle remains fully 2D while every puzzle seam stays visible.
 
 Every loose piece and the completed five-piece board is 20% larger than in the earlier version. The layout has four surrounding pieces and a fitted center with top and bottom sockets plus side tabs. Its outside contour has puzzle tabs rather than a rectangular edge. The supplied single-piece photo is used as the material reference: the outer pieces have thick dark side walls, a rounded highlighted bevel, fine parallel surface ridges, and realistic shadows while keeping the memory photographs visible. Photo 10 becomes a flat center piece after it is placed.
 
