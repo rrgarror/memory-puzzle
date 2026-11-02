@@ -81,12 +81,12 @@ function pathForBox(x1, y1, x2, y2, edges = {}) {
 }
 
 const photoRatios = new Map([
-  [1, 9 / 16],
-  [2, 9 / 16],
-  [3, 9 / 16],
+  [1, 3 / 4],
+  [2, 3 / 4],
+  [3, 3 / 4],
   [4, 9 / 16],
   [5, 16 / 9],
-  [6, 9 / 16]
+  [6, 2 / 3]
 ]);
 
 const boardSeams = {
@@ -419,12 +419,25 @@ function resetMorphOverlay() {
   clearStyle(memoryMorph.querySelector(".memory-morph__veil"), ["opacity"]);
   clearStyle(morphShell, ["left", "top", "width", "height", "opacity", "filter", "transform"]);
   clearStyle(morphDepth, ["opacity", "filter", "transform"]);
+  clearStyle(morphEdge, ["opacity", "filter"]);
   clearStyle(morphFullImage, ["opacity", "filter"]);
   clearStyle(morphCropImage, ["opacity", "filter"]);
   morphFullImage.removeAttribute("href");
   morphCropImage.removeAttribute("href");
   morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid meet");
   morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  [morphFullImage, morphCropImage].forEach((image) => {
+    image.setAttribute("x", "0");
+    image.setAttribute("y", "0");
+    image.setAttribute("width", "400");
+    image.setAttribute("height", "400");
+    image.querySelectorAll("animate").forEach((animation) => animation.remove());
+    const versions = image._attributeMorphVersions || {};
+    Object.keys(versions).forEach((attributeName) => {
+      versions[attributeName] += 1;
+    });
+    image._attributeMorphVersions = versions;
+  });
   [morphPath, morphDepth, morphEdge].forEach((path) => {
     path._morphVersion = (path._morphVersion || 0) + 1;
     path.querySelectorAll("animate").forEach((animation) => animation.remove());
@@ -544,6 +557,50 @@ function morphSvgPath(pathElement, fromPath, toPath, duration) {
   });
 }
 
+function morphSvgAttribute(element, attributeName, fromValue, toValue, duration) {
+  const versions = element._attributeMorphVersions || {};
+  const version = (versions[attributeName] || 0) + 1;
+  versions[attributeName] = version;
+  element._attributeMorphVersions = versions;
+  element.setAttribute(attributeName, String(fromValue));
+
+  if (reduceMotion.matches || duration <= 100 || typeof document.createElementNS !== "function") {
+    element.setAttribute(attributeName, String(toValue));
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    const animate = document.createElementNS(SVG_NS, "animate");
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(fallback);
+      if (element._attributeMorphVersions?.[attributeName] === version) {
+        element.setAttribute(attributeName, String(toValue));
+      }
+      animate.remove();
+      resolve();
+    };
+    const fallback = window.setTimeout(finish, duration + 120);
+    animate.setAttribute("attributeName", attributeName);
+    animate.setAttribute("from", String(fromValue));
+    animate.setAttribute("to", String(toValue));
+    animate.setAttribute("dur", `${duration}ms`);
+    animate.setAttribute("begin", "indefinite");
+    animate.setAttribute("fill", "freeze");
+    animate.setAttribute("calcMode", "spline");
+    animate.setAttribute("keySplines", ".2 .72 .22 1");
+    animate.addEventListener("endEvent", finish, { once: true });
+    element.appendChild(animate);
+    try {
+      animate.beginElement();
+    } catch {
+      finish();
+    }
+  });
+}
+
 function snapAt(left, top, width = "18%", duration = motionDuration(430, 70)) {
   snapFlash.style.left = left;
   snapFlash.style.top = top;
@@ -629,9 +686,12 @@ async function revealMemory(number, token, options = {}) {
   const source = `assets/images/photo${number}.jpg`;
 
   setSvgHref(morphFullImage, source);
-  setSvgHref(morphCropImage, source);
-  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid meet");
-  morphCropImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  morphCropImage.removeAttribute("href");
+  morphFullImage.setAttribute("x", String(aspectBox.x1));
+  morphFullImage.setAttribute("y", String(aspectBox.y1));
+  morphFullImage.setAttribute("width", String(aspectBox.x2 - aspectBox.x1));
+  morphFullImage.setAttribute("height", String(aspectBox.y2 - aspectBox.y1));
+  morphFullImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
   morphPath.setAttribute("d", startPath);
   morphDepth.setAttribute("d", startPath);
   morphEdge.setAttribute("d", startPath);
@@ -695,22 +755,13 @@ async function revealMemory(number, token, options = {}) {
     { duration: morphDuration, easing: "cubic-bezier(.22,.72,.2,1)", fill: "both" }
   );
 
-  const fullFade = morphFullImage.animate(
+  const imageTone = morphFullImage.animate(
     [
       { opacity: 1, filter: "brightness(1)" },
-      { opacity: 0.92, filter: "brightness(1.04)", offset: 0.28 },
-      { opacity: 0, filter: "brightness(1.12)" }
+      { opacity: 1, filter: "brightness(1.055)", offset: 0.54 },
+      { opacity: 1, filter: "brightness(1)" }
     ],
-    { duration: morphDuration * 0.72, delay: morphDuration * 0.12, easing: "ease-in", fill: "both" }
-  );
-
-  const cropReveal = morphCropImage.animate(
-    [
-      { opacity: 0, filter: "brightness(1.16) blur(2px)" },
-      { opacity: 0, filter: "brightness(1.12) blur(2px)", offset: 0.18 },
-      { opacity: 1, filter: "brightness(1) blur(0px)" }
-    ],
-    { duration: morphDuration * 0.82, delay: morphDuration * 0.08, easing: "ease-out", fill: "both" }
+    { duration: morphDuration, easing: "ease-in-out", fill: "both" }
   );
 
   const veilFade = veil.animate(
@@ -732,10 +783,17 @@ async function revealMemory(number, token, options = {}) {
     morphSvgPath(morphDepth, startPath, targetPath, morphDuration),
     morphSvgPath(morphEdge, startPath, targetPath, morphDuration)
   ];
+  const imageMorphs = [
+    morphSvgAttribute(morphFullImage, "x", aspectBox.x1, 0, morphDuration),
+    morphSvgAttribute(morphFullImage, "y", aspectBox.y1, 0, morphDuration),
+    morphSvgAttribute(morphFullImage, "width", aspectBox.x2 - aspectBox.x1, 400, morphDuration),
+    morphSvgAttribute(morphFullImage, "height", aspectBox.y2 - aspectBox.y1, 400, morphDuration)
+  ];
 
   await Promise.all([
-    waitForAnimations([shellAnimation, fullFade, cropReveal, veilFade, depthReveal]),
-    ...pathMorphs
+    waitForAnimations([shellAnimation, imageTone, veilFade, depthReveal]),
+    ...pathMorphs,
+    ...imageMorphs
   ]);
   if (token !== runId) return false;
 
@@ -789,6 +847,16 @@ function unionFrame(elements) {
   };
 }
 
+function exactPieceFrame(piece) {
+  const style = getComputedStyle(piece);
+  return {
+    left: Number.parseFloat(style.left),
+    top: Number.parseFloat(style.top),
+    width: Number.parseFloat(style.width),
+    height: Number.parseFloat(style.height)
+  };
+}
+
 function targetFrame(piece) {
   const stageRect = stage.getBoundingClientRect();
   return {
@@ -813,7 +881,9 @@ async function morphLoosePieces({
   sourceRotation = "0deg",
   showSourceImage = true
 }) {
-  const start = unionFrame(sources);
+  const start = sources.length === 1 && showSourceImage
+    ? exactPieceFrame(sources[0])
+    : unionFrame(sources);
   const target = targetFrame(result);
   const targetViewBox = parseViewBox(result.querySelector("svg").getAttribute("viewBox"));
   const veil = memoryMorph.querySelector(".memory-morph__veil");
@@ -837,8 +907,14 @@ async function morphLoosePieces({
   morphShell.style.top = `${start.top}px`;
   morphShell.style.width = `${start.width}px`;
   morphShell.style.height = `${start.height}px`;
-  morphShell.style.opacity = "1";
+  morphShell.style.opacity = showSourceImage ? "1" : "0";
   morphShell.style.transform = `translate(-50%, -50%) rotate(${sourceRotation})`;
+
+  if (showSourceImage) {
+    sources.forEach((source) => {
+      source.style.opacity = "0";
+    });
+  }
 
   const shellAnimation = morphShell.animate(
     [
@@ -873,18 +949,46 @@ async function morphLoosePieces({
 
   const sourceFade = morphFullImage.animate(
     showSourceImage
-      ? [{ opacity: 1 }, { opacity: 0.92, offset: 0.3 }, { opacity: 0 }]
+      ? [
+          { opacity: 1 },
+          { opacity: 1, offset: 0.3 },
+          { opacity: 0, offset: 0.46 },
+          { opacity: 0 }
+        ]
       : [{ opacity: 0 }, { opacity: 0 }],
-    { duration: duration * 0.72, easing: "ease-in", fill: "forwards" }
+    { duration, easing: "ease-in-out", fill: "forwards" }
   );
   const targetReveal = morphCropImage.animate(
-    [{ opacity: 0 }, { opacity: 0, offset: 0.2 }, { opacity: 1 }],
-    { duration: duration * 0.86, delay: duration * 0.1, easing: "ease-out", fill: "forwards" }
+    [
+      { opacity: 0 },
+      { opacity: 0, offset: 0.5 },
+      { opacity: 1, offset: 0.82 },
+      { opacity: 1 }
+    ],
+    { duration, easing: "ease-out", fill: "forwards" }
   );
-  const sourceAnimations = sources.map((source) => source.animate(
-    [{ opacity: 1 }, { opacity: 0.82, offset: 0.22 }, { opacity: 0 }],
-    { duration: duration * 0.55, easing: "ease-in", fill: "forwards" }
-  ));
+  const sourceAnimations = showSourceImage
+    ? []
+    : sources.map((source) => source.animate(
+        [
+          { opacity: 1 },
+          { opacity: 1, offset: 0.22 },
+          { opacity: 0, offset: 0.42 },
+          { opacity: 0 }
+        ],
+        { duration, easing: "ease-in-out", fill: "forwards" }
+      ));
+  const overlayReveal = morphShell.animate(
+    showSourceImage
+      ? [{ opacity: 1 }, { opacity: 1 }]
+      : [
+          { opacity: 0 },
+          { opacity: 0, offset: 0.4 },
+          { opacity: 1, offset: 0.52 },
+          { opacity: 1 }
+        ],
+    { duration, easing: "ease-in-out", fill: "forwards" }
+  );
   const pathMorphs = [
     morphSvgPath(morphPath, fromPath, toPath, duration),
     morphSvgPath(morphDepth, fromPath, toPath, duration),
@@ -892,7 +996,7 @@ async function morphLoosePieces({
   ];
 
   await Promise.all([
-    waitForAnimations([shellAnimation, sourceFade, targetReveal, ...sourceAnimations]),
+    waitForAnimations([shellAnimation, overlayReveal, sourceFade, targetReveal, ...sourceAnimations]),
     ...pathMorphs
   ]);
   if (token !== runId) return false;
@@ -1306,9 +1410,30 @@ async function completeCenterPiece(token) {
     [{ opacity: 0.82 }, { opacity: 0 }],
     { duration: placementDuration, easing: "ease-in", fill: "forwards" }
   );
+  const flatOuterDepths = [6, 7].flatMap((number) =>
+    [...assemblyPieces.get(number).querySelectorAll(".assembly-depth")]
+  );
+  const outerFlattenAnimations = flatOuterDepths.map((depth) => depth.animate(
+    [
+      { opacity: 1 },
+      { opacity: 1, offset: 0.42 },
+      { opacity: 0 }
+    ],
+    { duration: placementDuration, easing: "ease-in-out", fill: "forwards" }
+  ));
 
-  await waitForAnimations([placement, depthFlatten, backgroundReveal]);
+  await waitForAnimations([
+    placement,
+    depthFlatten,
+    backgroundReveal,
+    ...outerFlattenAnimations
+  ]);
   if (token !== runId) return false;
+
+  flatOuterDepths.forEach((depth) => {
+    cancelAnimations(depth);
+    depth.style.opacity = "0";
+  });
 
   center.querySelectorAll(".assembly-depth").forEach((depth) => {
     depth.style.opacity = "0";
