@@ -294,7 +294,7 @@ function buildFinalBoard() {
       <path class="final-piece-depth final-piece-depth--bevel" d="${path}"></path>
       <image
         class="final-photo"
-        href="assets/images/photo11.JPG"
+        href="assets/images/photo11.jpg"
         x="0"
         y="0"
         width="960"
